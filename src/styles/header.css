@@ -1,0 +1,196 @@
+/* src/styles/header.css */
+/* 헤더 / 네비게이션 / 모바일 메뉴 */
+
+.header {
+  width: 100%;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 12px 16px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--text-main);
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  background: #ffffff;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo-mark {
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  background: var(--jelly-blue);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 12px rgba(63, 127, 211, 0.5);
+}
+
+.logo-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.logo-title {
+  font-weight: 800;
+  font-size: 18px;
+}
+
+.logo-sub {
+  font-size: 11px;
+  color: var(--text-sub);
+}
+
+/* 데스크탑 네비게이션 */
+.header-nav {
+  display: flex;
+  gap: 10px;
+}
+
+.nav-item {
+  border: none;
+  background: transparent;
+  color: var(--text-sub);
+  font-size: 13px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.nav-item:hover {
+  background: #f4f6ff;
+}
+
+.nav-item-active {
+  background: #eef3ff;
+  color: #1f3f73;
+  border: 1px solid #c9d8ff;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.header-btn {
+  font-size: 12px;
+  border-radius: 999px;
+  padding: 6px 12px;
+  cursor: pointer;
+  border: none;
+}
+
+/* 아웃라인 버튼 */
+.header-btn.outline {
+  background: transparent;
+  color: var(--jelly-blue);
+  border: 1px solid var(--jelly-blue);
+}
+
+/* 채워진 버튼 */
+.header-btn.filled {
+  background: var(--jelly-blue);
+  color: #ffffff;
+  box-shadow: 0 4px 10px rgba(63, 127, 211, 0.3);
+}
+
+.header-user {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.user-badge {
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--jelly-yellow);
+  color: #5b4a17;
+}
+
+/* 모바일 햄버거 버튼 */
+.header-hamburger {
+  display: none;
+  width: 32px;
+  height: 24px;
+  border: none;
+  background: transparent;
+  padding: 0;
+  margin-left: 8px;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+  cursor: pointer;
+}
+
+.header-hamburger-line {
+  height: 3px;
+  border-radius: 999px;
+  background: #333;
+}
+
+/* open 상태에서도 모양 유지 */
+.header-hamburger.open .header-hamburger-line:nth-child(1),
+.header-hamburger.open .header-hamburger-line:nth-child(2),
+.header-hamburger.open .header-hamburger-line:nth-child(3) {
+  transform: none;
+  opacity: 1;
+}
+
+/* 모바일 메뉴 패널 */
+.header-mobile-menu {
+  display: none;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 56px;
+  padding: 10px 16px 12px;
+  background: #ffffff;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  border-bottom-left-radius: 18px;
+  border-bottom-right-radius: 18px;
+  z-index: 25;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.header-mobile-menu.open {
+  display: flex;
+}
+
+.header-mobile-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.header-mobile-auth {
+  margin-top: 6px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
+/* 반응형 헤더 */
+@media (max-width: 768px) {
+  .header {
+    padding: 10px 12px 8px;
+  }
+
+  .header-nav,
+  .header-right {
+    display: none;
+  }
+
+  .header-hamburger {
+    display: flex;
+  }
+}

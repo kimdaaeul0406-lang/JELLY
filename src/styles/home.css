@@ -1,0 +1,49 @@
+/* src/styles/home.css */
+/* 홈 화면 카드 & 시작 버튼 */
+
+.card {
+  background: #ffffff;
+  padding: 40px 52px;
+  border-radius: 28px;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.06);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 22px;
+  border: 1px solid var(--border-soft);
+}
+
+.badge {
+  background: var(--jelly-yellow);
+  color: #5b4a17;
+  border-radius: 999px;
+  padding: 8px 22px;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  font-weight: 700;
+}
+
+/* 메인 시작 버튼 */
+.start-btn {
+  border: none;
+  border-radius: 999px;
+  padding: 14px 40px;
+  font-size: 16px;
+  font-weight: 700;
+  color: #ffffff;
+  cursor: pointer;
+  background: var(--jelly-blue);
+  box-shadow: 0 10px 20px rgba(63, 127, 211, 0.35);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+}
+
+.start-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 26px rgba(63, 127, 211, 0.4);
+}
+
+.start-btn:active {
+  transform: translateY(1px);
+  box-shadow: 0 6px 14px rgba(63, 127, 211, 0.3);
+  opacity: 0.9;
+}

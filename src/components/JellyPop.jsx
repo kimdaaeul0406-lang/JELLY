@@ -1,0 +1,219 @@
+// src/components/JellyPop.js
+import React, { useEffect, useRef } from "react";
+
+export default function JellyPop({ onComplete }) {
+  const canvasRef = useRef(null);
+  const particlesRef = useRef([]);
+  const animationRef = useRef(null);
+
+  // 파스텔 + 쨍한 젤리 색깔들
+  const COLORS = [
+    "#FF6B81",
+    "#FF9F1A",
+    "#FFE66D",
+    "#2ED573",
+    "#1E90FF",
+    "#A29BFE",
+    "#FF6EC7",
+  ];
+
+  class Particle {
+    constructor(x, y) {
+      this.x = x;
+      this.y = y;
+
+      this.size = Math.random() * 26 + 18; // 젤리 크기
+      this.speedX = (Math.random() - 0.5) * 12;
+      this.speedY = -Math.random() * 18 - 10;
+      this.gravity = 0.45;
+
+      this.alpha = 1;
+      this.rotation = Math.random() * Math.PI * 2;
+      this.rotationSpeed = (Math.random() - 0.5) * 0.3;
+
+      // 60% 젤리빈, 40% 곰돌이
+      this.isBean = Math.random() > 0.4;
+      this.color = COLORS[Math.floor(Math.random() * COLORS.length)];
+      this.bounceCount = 0;
+    }
+
+    update(h) {
+      this.speedY += this.gravity;
+      this.x += this.speedX;
+      this.y += this.speedY;
+      this.rotation += this.rotationSpeed;
+
+      const floor = h * 0.9;
+
+      // 🔸 바닥에서 한 번만 통! 튕기기
+      if (this.y > floor && this.bounceCount < 1) {
+        this.y = floor;
+        this.speedY *= -0.5; // 살짝만 튕기고
+        this.bounceCount++;
+      }
+
+      // 🔸 튕긴 다음부터는 빨리 사라지기
+      if (this.bounceCount >= 1) {
+        this.alpha -= 0.07; // 0.03 → 0.07 로 두 배 이상 빠르게
+      }
+    }
+
+    draw(ctx) {
+      if (this.alpha <= 0) return;
+
+      ctx.save();
+      ctx.globalAlpha = this.alpha;
+      ctx.translate(this.x, this.y);
+      ctx.rotate(this.rotation);
+
+      if (this.isBean) {
+        // 젤리빈 (타원)
+        ctx.beginPath();
+        ctx.ellipse(0, 0, this.size * 0.35, this.size * 0.6, 0, 0, Math.PI * 2);
+        ctx.fillStyle = this.color;
+        ctx.fill();
+
+        // 하이라이트
+        ctx.beginPath();
+        ctx.ellipse(
+          -this.size * 0.1,
+          -this.size * 0.3,
+          this.size * 0.12,
+          this.size * 0.25,
+          0,
+          0,
+          Math.PI * 2
+        );
+        ctx.fillStyle = "rgba(255,255,255,0.65)";
+        ctx.fill();
+      } else {
+        // 하리보 곰돌이 느낌 (단순화)
+        ctx.fillStyle = this.color;
+
+        // 머리
+        ctx.beginPath();
+        ctx.arc(0, 0, this.size * 0.35, 0, Math.PI * 2);
+        ctx.fill();
+
+        // 귀
+        ctx.beginPath();
+        ctx.arc(
+          -this.size * 0.25,
+          -this.size * 0.25,
+          this.size * 0.14,
+          0,
+          Math.PI * 2
+        );
+        ctx.arc(
+          this.size * 0.25,
+          -this.size * 0.25,
+          this.size * 0.14,
+          0,
+          Math.PI * 2
+        );
+        ctx.fill();
+
+        // 몸통
+        ctx.beginPath();
+        ctx.ellipse(
+          0,
+          this.size * 0.45,
+          this.size * 0.3,
+          this.size * 0.4,
+          0,
+          0,
+          Math.PI * 2
+        );
+        ctx.fill();
+
+        // 팔
+        ctx.beginPath();
+        ctx.arc(
+          -this.size * 0.35,
+          this.size * 0.35,
+          this.size * 0.13,
+          0,
+          Math.PI * 2
+        );
+        ctx.arc(
+          this.size * 0.35,
+          this.size * 0.35,
+          this.size * 0.13,
+          0,
+          Math.PI * 2
+        );
+        ctx.fill();
+
+        // 투명한 하이라이트
+        ctx.globalAlpha = this.alpha * 0.4;
+        ctx.beginPath();
+        ctx.arc(
+          -this.size * 0.1,
+          -this.size * 0.05,
+          this.size * 0.18,
+          0,
+          0,
+          Math.PI * 2
+        );
+        ctx.fillStyle = "rgba(255,255,255,0.85)";
+        ctx.fill();
+      }
+
+      ctx.restore();
+    }
+  }
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext("2d");
+
+    const resize = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    };
+    resize();
+
+    // 처음 한 번 팡! 하고 젤리들 생성
+    particlesRef.current = [];
+    const centerX = canvas.width / 2;
+    const bottomY = canvas.height * 0.9;
+
+    const count = 50; // 너무 많으면 버벅, 적당히
+    for (let i = 0; i < count; i++) {
+      particlesRef.current.push(new Particle(centerX, bottomY));
+    }
+
+    let finished = false;
+
+    const animate = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      particlesRef.current = particlesRef.current.filter((p) => p.alpha > 0);
+
+      particlesRef.current.forEach((p) => {
+        p.update(canvas.height);
+        p.draw(ctx);
+      });
+
+      // 다 사라지면 onComplete 한 번만 호출
+      if (!finished && particlesRef.current.length === 0) {
+        finished = true;
+        if (onComplete) onComplete();
+      }
+
+      animationRef.current = requestAnimationFrame(animate);
+    };
+
+    animate();
+    window.addEventListener("resize", resize);
+
+    return () => {
+      window.removeEventListener("resize", resize);
+      if (animationRef.current) cancelAnimationFrame(animationRef.current);
+    };
+  }, [onComplete]);
+
+  return <canvas ref={canvasRef} className="jelly-canvas" />;
+}

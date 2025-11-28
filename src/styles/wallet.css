@@ -1,0 +1,194 @@
+/* src/styles/wallet.css */
+/* 내 젤리 지갑 & 포트폴리오 */
+
+.wallet-card {
+  background: #ffffff;
+  border: 1px solid var(--border-soft);
+  padding: 14px;
+  border-radius: 16px;
+  margin-bottom: 16px;
+  box-shadow: var(--card-shadow);
+}
+
+.wallet-main {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.wallet-label {
+  font-size: 13px;
+  color: var(--text-sub);
+  margin-bottom: 4px;
+}
+
+.wallet-cash,
+.wallet-jelly {
+  font-size: 14px;
+  margin: 1px 0;
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.wallet-cash span,
+.wallet-jelly span {
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.wallet-pill {
+  padding: 4px 10px;
+  background: var(--jelly-yellow);
+  border-radius: 999px;
+  font-size: 11px;
+  color: #5b4a17;
+  height: fit-content;
+}
+
+/* 진행률 바 */
+.wallet-progress {
+  background: #fff7d1;
+  height: 8px;
+  border-radius: 10px;
+  margin: 10px 0 3px 0;
+  overflow: hidden;
+}
+
+.wallet-progress-fill {
+  background: var(--jelly-yellow);
+  height: 100%;
+  border-radius: 10px;
+}
+
+.wallet-progress-text {
+  font-size: 11px;
+  color: var(--text-sub);
+}
+
+/* 지갑 상세 그리드 */
+.wallet-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 14px;
+  margin-top: 10px;
+}
+
+.wallet-block {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 12px 14px;
+  border: 1px solid var(--border-soft);
+  box-shadow: var(--card-shadow);
+}
+
+.wallet-block h3 {
+  margin-top: 0;
+  margin-bottom: 8px;
+  font-size: 15px;
+}
+
+.wallet-balance {
+  margin: 2px 0;
+  font-size: 14px;
+}
+
+.wallet-note {
+  margin-top: 6px;
+  font-size: 12px;
+  color: var(--text-sub);
+}
+
+.wallet-charge-form {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.wallet-input {
+  border-radius: 8px;
+  border: 1px solid #e5d6f4;
+  padding: 6px 8px;
+  font-size: 13px;
+}
+
+/* 충전 / 변환 버튼 */
+.wallet-charge-btn,
+.wallet-convert-btn {
+  border: none;
+  border-radius: 999px;
+  padding: 7px 10px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  background: var(--jelly-blue);
+  color: #ffffff;
+  margin-top: 2px;
+  box-shadow: 0 6px 12px rgba(63, 127, 211, 0.3);
+}
+
+.wallet-convert-btn {
+  margin-top: 4px;
+}
+
+.wallet-convert-btn-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.wallet-tip {
+  margin-top: 6px;
+  font-size: 11px;
+  color: var(--text-sub);
+}
+
+/* 포트폴리오 요약 */
+.jelly-portfolio {
+  margin-top: 10px;
+  background: #fffdf4;
+  border-radius: 14px;
+  padding: 8px 10px;
+  border: 1px solid #f7eed4;
+}
+
+.jelly-portfolio-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  padding: 4px 0;
+  border-bottom: 1px dashed rgba(181, 158, 109, 0.4);
+}
+
+.jelly-portfolio-row:last-child {
+  border-bottom: none;
+}
+
+.jelly-portfolio-name {
+  font-weight: 600;
+}
+
+.jelly-portfolio-qty,
+.jelly-portfolio-avg {
+  color: var(--text-sub);
+}
+
+/* 보유 손익 텍스트 */
+.holding-detail {
+  font-size: 0.8rem;
+  opacity: 0.8;
+}
+
+.holding-pnl {
+  font-size: 0.8rem;
+}
+
+.holding-pnl.up {
+  color: var(--jelly-blue);
+}
+
+.holding-pnl.down {
+  color: var(--jelly-red);
+}

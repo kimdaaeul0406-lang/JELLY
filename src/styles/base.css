@@ -1,0 +1,53 @@
+/* src/styles/base.css */
+/* 기본 세팅 & 공통 스타일 */
+
+:root {
+  --jelly-blue: #3f7fd3; /* 하리보 블루 */
+  --jelly-yellow: #ffe27a; /* 하리보 옐로우 */
+  --jelly-red: #e05b6f; /* 하락/경고 */
+  --text-main: #2b2b2b;
+  --text-sub: #8a7f98;
+  --border-soft: #ece6f7;
+  --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Raleway", "Pretendard", system-ui, -apple-system, sans-serif;
+  background: #ffffff;
+  color: var(--text-main);
+}
+
+#root {
+  height: 100vh;
+}
+
+/* 전체 앱 배경 */
+.app {
+  min-height: 100vh;
+  background: #ffffff;
+}
+
+/* 홈(첫 페이지) */
+.app-home {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* 대시보드(두 번째 페이지) */
+.app-dashboard {
+  /* 필요하면 padding 추가 */
+}
+
+/* 젤리 팡팡 캔버스 */
+.jelly-canvas {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 10;
+}

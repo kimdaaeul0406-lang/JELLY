@@ -1,0 +1,10 @@
+/* src/styles.css */
+/* 이 파일은 다른 CSS들을 모아오는 총괄 파일이에요 */
+
+@import "./styles/base.css";
+@import "./styles/header.css";
+@import "./styles/home.css";
+@import "./styles/wallet.css";
+@import "./styles/market.css";
+@import "./styles/auth.css";
+@import "./styles/mypage.css";

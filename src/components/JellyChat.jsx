@@ -39,7 +39,7 @@ async function getBotReply(userMessage) {
 }
 
 export default function JellyChat() {
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
   const [isSending, setIsSending] = useState(false);
 
   const [messages, setMessages] = useState([

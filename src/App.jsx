@@ -189,14 +189,33 @@ export default function App() {
     if (!trimmed) return;
     setSearchHistory((prev) => [...prev, trimmed]);
   }
-
-  // 💰 지갑 충전 (계좌연동 X, 가짜 충전)
+  // 💰 지갑 충전 (일일 한도 포함)
   function handleCharge(amountWon) {
     const amount = Number(amountWon);
     if (isNaN(amount) || amount <= 0) {
-      alert("충전 금액을 올바르게 입력해 주세요.");
+      alert("충전 금액을 올바르게 입력해 주세요!");
       return;
     }
+
+    const DAILY_LIMIT = 50000000; // 하루 충전 한도 (5천만 원)
+
+    const today = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+    const saved = JSON.parse(localStorage.getItem("dailyCharge") || "{}");
+
+    const totalToday = saved[today] || 0;
+
+    // 🔒 일일 한도 초과 체크
+    if (totalToday + amount > DAILY_LIMIT) {
+      const remain = DAILY_LIMIT - totalToday;
+      alert(
+        `오늘은 더 충전할 수 없어요!\n남은 일일 충전 한도: ${remain.toLocaleString()}원`
+      );
+      return;
+    }
+
+    // 정상 충전 → 기록 저장
+    saved[today] = totalToday + amount;
+    localStorage.setItem("dailyCharge", JSON.stringify(saved));
 
     const bonusJelly = Math.floor(amount / 10000) * JELLY_PER_10000_WON;
 
@@ -206,7 +225,7 @@ export default function App() {
     }));
 
     alert(
-      `${amount.toLocaleString()}원이 충전되었습니다.\n보너스 젤리 ${bonusJelly} J가 적립되었어요!`
+      `${amount.toLocaleString()}원이 충전되었습니다.\n보너스 젤리 ${bonusJelly} J 적립!`
     );
   }
 

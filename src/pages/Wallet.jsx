@@ -4,9 +4,38 @@ import React, { useState } from "react";
 export default function Wallet({ wallet, onCharge, onConvert }) {
   const [amount, setAmount] = useState("");
 
+  const MAX_CHARGE_AMOUNT = 100000000; // 최대 충전 금액 (1억)
+
   function handleSubmit(e) {
     e.preventDefault();
-    onCharge(amount);
+
+    const raw = amount.trim();
+    if (!raw) return;
+
+    const value = Number(raw);
+
+    // 1) 숫자인지 확인
+    if (Number.isNaN(value)) {
+      alert("숫자를 입력해 주세요!");
+      return;
+    }
+
+    // 2) 0 이하 금액 금지
+    if (value <= 0) {
+      alert("0원보다 큰 금액을 입력해야 해요!");
+      return;
+    }
+
+    // 3) 최대 충전 금액 제한
+    if (value > MAX_CHARGE_AMOUNT) {
+      alert(
+        `한 번에 충전할 수 있는 최대 금액은 ${MAX_CHARGE_AMOUNT.toLocaleString()}원입니다.`
+      );
+      return;
+    }
+
+    // 4) 정상일 때만 충전 실행
+    onCharge(value);
     setAmount("");
   }
 
@@ -36,10 +65,11 @@ export default function Wallet({ wallet, onCharge, onConvert }) {
           <form onSubmit={handleSubmit} className="wallet-charge-form">
             <input
               type="number"
-              placeholder="충전 금액 (원)"
               value={amount}
+              min={0}
+              max={MAX_CHARGE_AMOUNT}
               onChange={(e) => setAmount(e.target.value)}
-              className="wallet-input"
+              placeholder="충전할 금액 (원)"
             />
             <button type="submit" className="wallet-charge-btn">
               충전 + 젤리 적립

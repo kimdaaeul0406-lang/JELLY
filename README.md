@@ -76,6 +76,7 @@
 
 ## 3. 폴더 구조
 
+```
 src
 ├─ components
 │ ├─ Header.jsx
@@ -105,6 +106,7 @@ src
 ├─ jellyMarketUtils.js
 ├─ App.jsx
 └─ index.jsx
+```
 
 ---
 

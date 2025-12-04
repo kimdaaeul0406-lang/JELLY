@@ -1,0 +1,186 @@
+/* src/styles/jelly-chat.css */
+/* 젤리봇 채팅 컴포넌트 스타일 */
+
+/* 채팅 열기 버튼 (닫혀있을 때) */
+.jelly-chat-button {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 999;
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  border: none;
+  background: #3f7fd3;
+  color: #fff;
+  font-size: 26px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.jelly-chat-button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+}
+
+.jelly-chat-button:active {
+  transform: scale(0.95);
+}
+
+/* 채팅 컨테이너 */
+.jelly-chat-container {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  width: 320px;
+  height: 430px;
+  background: #ffffff;
+  border-radius: 18px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
+  display: flex;
+  flex-direction: column;
+  z-index: 999;
+  overflow: hidden;
+}
+
+/* 채팅 헤더 */
+.jelly-chat-header {
+  background: #3f7fd3;
+  color: #fff;
+  padding: 10px 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+}
+
+.jelly-chat-header-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.jelly-chat-header-btn {
+  border: none;
+  background: rgba(255, 255, 255, 0.25);
+  color: #fff;
+  border-radius: 6px;
+  padding: 2px 6px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: background 0.2s;
+}
+
+.jelly-chat-header-btn:hover {
+  background: rgba(255, 255, 255, 0.35);
+}
+
+.jelly-chat-header-close {
+  border: none;
+  background: transparent;
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.jelly-chat-header-close:hover {
+  transform: scale(1.2);
+}
+
+/* 메시지 영역 */
+.jelly-chat-messages {
+  flex: 1;
+  padding: 10px;
+  overflow-y: auto;
+  background: #f4f5fa;
+}
+
+.jelly-chat-message {
+  display: flex;
+  margin-bottom: 8px;
+}
+
+.jelly-chat-message-user {
+  justify-content: flex-end;
+}
+
+.jelly-chat-message-bot {
+  justify-content: flex-start;
+}
+
+.jelly-chat-message-bubble {
+  max-width: 80%;
+  padding: 6px 10px;
+  border-radius: 12px;
+  white-space: pre-wrap;
+  font-size: 13px;
+  word-wrap: break-word;
+}
+
+.jelly-chat-message-bubble-user {
+  background: #ffe27a;
+}
+
+.jelly-chat-message-bubble-bot {
+  background: #fff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.jelly-chat-loading {
+  font-size: 12px;
+  color: #777;
+  margin: 8px 0;
+}
+
+/* 입력 영역 */
+.jelly-chat-input-area {
+  padding: 8px;
+  border-top: 1px solid #ddd;
+  background: #fff;
+  display: flex;
+  gap: 6px;
+}
+
+.jelly-chat-textarea {
+  flex: 1;
+  resize: none;
+  padding: 6px 8px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  outline: none;
+  font-size: 13px;
+  font-family: inherit;
+  transition: border-color 0.2s;
+}
+
+.jelly-chat-textarea:focus {
+  border-color: #3f7fd3;
+}
+
+.jelly-chat-send-btn {
+  min-width: 58px;
+  background: #3f7fd3;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  transition: background 0.2s, transform 0.1s;
+}
+
+.jelly-chat-send-btn:hover:not(.jelly-chat-send-btn-disabled) {
+  background: #2d6bb3;
+  transform: scale(1.02);
+}
+
+.jelly-chat-send-btn:active:not(.jelly-chat-send-btn-disabled) {
+  transform: scale(0.98);
+}
+
+.jelly-chat-send-btn-disabled {
+  background: #999;
+  cursor: default;
+}
+

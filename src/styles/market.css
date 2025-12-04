@@ -492,6 +492,7 @@
 }
 
 /* 카드보기 전용 - 거래 불가 (실시간 변동만 표시) */
+
 .trade-box.view-only {
   text-align: center;
   padding: 0.8rem 0.6rem;
@@ -694,8 +695,8 @@
 }
 
 /* 이름순 / 수익률순 탭 */
-/* 정렬 탭 - 카드보기에서도 리스트보기와 동일한 스타일 사용 */
 
+/* 정렬 탭 - 카드보기에서도 리스트보기와 동일한 스타일 사용 */
 .sort-tabs {
   display: flex;
   gap: 6px;
@@ -773,7 +774,7 @@
 .pro-layout {
   margin-top: 24px;
   display: grid;
-  grid-template-columns: 1.4fr 1.2fr; /* 오른쪽 패널도 넓게 */
+  grid-template-columns: 1.4fr 1.2fr;
   gap: 20px;
 }
 
@@ -856,7 +857,7 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
-  align-self: start; /* 그리드 높이에 끌려가지 않게 */
+  align-self: start;
 }
 
 .pro-detail-header {
@@ -897,10 +898,7 @@
 /* SVG 차트 – 반응형 높이 */
 .pro-chart-svg {
   width: 100%;
-  height: min(
-    220px,
-    55vw
-  ); /* 데스크탑에선 220px, 모바일에선 화면폭에 맞게 축소 */
+  height: min(220px, 55vw);
   display: block;
 }
 
@@ -932,7 +930,7 @@
   }
 
   .pro-detail-panel {
-    order: -1; /* 모바일에서 상세 카드가 표 위로 올라오도록 */
+    order: -1;
     width: 100%;
   }
 }
@@ -1291,180 +1289,6 @@
 
 .jelly-chat-floating {
   position: fixed;
-  right: 18px;
-  bottom: 18px;
-  z-index: 40;
-}
-
-/* 둥근 토글 버튼 */
-.jelly-chat-toggle {
-  width: 54px;
-  height: 54px;
-  border-radius: 50%;
-  border: none;
-  background: var(--jelly-blue);
-  color: #ffffff;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 2px;
-  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.25);
-  cursor: pointer;
-}
-
-.jelly-chat-toggle-emoji {
-  font-size: 20px;
-}
-
-.jelly-chat-toggle-text {
-  font-size: 11px;
-}
-
-/* 말풍선 패널 */
-.jelly-chat-panel {
-  position: absolute;
-  right: 0;
-  bottom: 64px;
-  width: 280px;
-  max-height: 360px;
-  background: #ffffff;
-  border-radius: 18px;
-  border: 1px solid #e8defc;
-  box-shadow: 0 12px 30px rgba(152, 120, 255, 0.25);
-  padding: 12px 12px 10px;
-}
-
-.jelly-chat-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 6px;
-  margin-bottom: 6px;
-}
-
-.jelly-chat-title {
-  font-size: 14px;
-  font-weight: 700;
-}
-
-.jelly-chat-subtitle {
-  font-size: 11px;
-  color: var(--text-sub);
-}
-
-.jelly-chat-header-actions {
-  display: flex;
-  gap: 4px;
-}
-
-.jelly-chat-header-btn {
-  border: none;
-  border-radius: 999px;
-  padding: 3px 8px;
-  font-size: 10px;
-  cursor: pointer;
-  background: #f3f0ff;
-  color: #4b3f9a;
-}
-
-.jelly-chat-header-btn.close {
-  background: transparent;
-  color: #666;
-}
-
-/* 메시지 영역 */
-
-.jelly-chat-window {
-  max-height: 190px;
-  overflow-y: auto;
-  padding: 6px 4px;
-  border-radius: 12px;
-  background: #fbf9ff;
-  border: 1px solid #ede7ff;
-  margin-bottom: 6px;
-}
-
-.jelly-chat-empty {
-  font-size: 12px;
-  color: var(--text-sub);
-}
-
-.jelly-chat-msg {
-  display: flex;
-  margin-bottom: 4px;
-}
-
-.jelly-chat-msg.user {
-  justify-content: flex-end;
-}
-
-.jelly-chat-msg.bot {
-  justify-content: flex-start;
-}
-
-.jelly-chat-bubble {
-  max-width: 80%;
-  padding: 6px 9px;
-  border-radius: 12px;
-  font-size: 12px;
-  line-height: 1.4;
-  white-space: pre-wrap;
-}
-
-.jelly-chat-bubble.user {
-  background: var(--jelly-blue);
-  color: #ffffff;
-  border-bottom-right-radius: 2px;
-}
-
-.jelly-chat-bubble.bot {
-  background: #ffffff;
-  border: 1px solid #e0d6ff;
-  border-bottom-left-radius: 2px;
-}
-
-/* 입력 */
-
-.jelly-chat-input-row {
-  display: flex;
-  gap: 6px;
-  align-items: center;
-}
-
-.jelly-chat-input {
-  flex: 1;
-  resize: none;
-  padding: 6px 8px;
-  border-radius: 10px;
-  border: 1px solid #e0d9ff;
-  font-size: 11px;
-}
-
-.jelly-chat-send-btn {
-  border-radius: 999px;
-  border: none;
-  padding: 6px 10px;
-  font-size: 11px;
-  font-weight: 700;
-  cursor: pointer;
-  background: var(--jelly-blue);
-  color: #ffffff;
-}
-
-/* 모바일에서 너무 튀어나오지 않게 */
-@media (max-width: 600px) {
-  .jelly-chat-panel {
-    width: 240px;
-  }
-}
-
-/* ─────────────────────────── */
-/* Jelly 리서치 톡 – 플로팅 챗봇 */
-/* ─────────────────────────── */
-
-.jelly-chat-floating {
-  position: fixed;
   right: 24px;
   bottom: 24px;
   z-index: 999;
@@ -1502,8 +1326,8 @@
   position: absolute;
   right: 0;
   bottom: 78px;
-  width: 380px; /* ← 넓게 */
-  max-height: 520px; /* ← 많이 담기게 */
+  width: 380px;
+  max-height: 520px;
   background: #ffffff;
   border-radius: 20px;
   border: 1px solid #e8defc;
@@ -1642,7 +1466,7 @@
   border-radius: 12px;
   border: 1px solid #e0d9ff;
   font-size: 13px;
-  height: 70px; /* PC에서는 넉넉하게 */
+  height: 70px;
   font-family: inherit;
 }
 
@@ -1810,117 +1634,6 @@
   padding: 8px;
   background: #f8f8fc;
   border-radius: 8px;
-}
-
-.trade-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 6px;
-}
-
-.trade-preview-card {
-  background: #fffdf4;
-  border: 1px solid #f7eed4;
-  border-radius: 8px;
-  padding: 6px 8px;
-  margin-bottom: 8px;
-}
-
-.preview-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 11px;
-  padding: 2px 0;
-}
-
-.preview-item span {
-  color: var(--text-sub);
-}
-
-.preview-item strong {
-  color: var(--text-main);
-}
-
-.preview-item.up strong {
-  color: var(--jelly-blue);
-}
-
-.preview-item.down strong {
-  color: var(--jelly-red);
-}
-
-.preview-pnl {
-  font-size: 10px;
-  margin-left: 4px;
-  opacity: 0.9;
-}
-
-.trade-btn-wrap {
-  display: flex;
-  gap: 6px;
-  margin-top: 6px;
-}
-
-.trade-btn {
-  flex: 1;
-  border-radius: 8px;
-  border: none;
-  padding: 8px 0;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.trade-btn.buy {
-  background: var(--jelly-blue);
-  color: #ffffff;
-  box-shadow: 0 2px 8px rgba(63, 127, 211, 0.25);
-}
-
-.trade-btn.buy:hover {
-  background: #2d6bb3;
-  transform: translateY(-1px);
-}
-
-.trade-btn.sell {
-  background: #fff0f3;
-  color: var(--jelly-red);
-  border: 1px solid rgba(224, 91, 111, 0.3);
-}
-
-.trade-btn.sell:hover:not(:disabled) {
-  background: #ffe4e8;
-  transform: translateY(-1px);
-}
-
-.trade-btn.sell:disabled {
-  background: #f5f5f5;
-  color: #bbb;
-  border-color: #e5e5e5;
-  cursor: not-allowed;
-}
-
-.qty-input {
-  width: 70px;
-  padding: 6px 8px;
-  border-radius: 8px;
-  border: 1px solid #e4d7f1;
-  font-size: 12px;
-  text-align: center;
-  outline: none;
-}
-
-.qty-input:focus {
-  border-color: var(--jelly-blue);
-  box-shadow: 0 0 0 2px rgba(63, 127, 211, 0.1);
-}
-
-.qty-input::placeholder {
-  color: #bbb;
-  font-size: 11px;
 }
 
 /* ─────────────────────────── */
@@ -2097,6 +1810,7 @@
 .trade-btn-sell:disabled {
   background: #f5f5f5;
   color: #bbb;
+  border-color: #e5e5e5;
   cursor: not-allowed;
 }
 
@@ -2112,5 +1826,18 @@
 
   .market-table-fixed .col-trade {
     width: 35%;
+  }
+}
+
+/* ─────────────────────────── */
+/* 모바일에서 리스트뷰 가로스크롤 */
+/* ─────────────────────────── */
+@media (max-width: 600px) {
+  .market-table-wrapper {
+    overflow-x: auto;
+  }
+
+  .market-table {
+    min-width: 540px; /* 화면보다 살짝 넓게 → 옆으로 스크롤 */
   }
 }

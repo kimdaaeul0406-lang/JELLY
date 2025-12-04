@@ -1921,3 +1921,39 @@
     font-size: 13px;
   }
 }
+/* 📱 모바일에서 수량 + 매수/매도 가로 정렬 */
+@media (max-width: 850px) {
+  /* 매수/매도 셀 전체를 가로 플렉스로 */
+  .market-row .col-trade .cell-trade {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  /* 수량 입력칸 */
+  .market-row .col-trade .trade-qty-input {
+    flex: 0 0 35%; /* 전체 중 약 35% 차지 */
+    height: 32px;
+    padding: 0 6px;
+    font-size: 12px;
+    text-align: right;
+    box-sizing: border-box;
+    margin: 0; /* 위아래 여백 제거 */
+  }
+
+  /* 버튼 묶음 */
+  .market-row .col-trade .trade-btn-group {
+    flex: 1;
+    display: flex;
+    gap: 4px;
+    margin: 0;
+  }
+
+  .market-row .col-trade .trade-btn-buy,
+  .market-row .col-trade .trade-btn-sell {
+    flex: 1;
+    height: 32px;
+    padding: 0;
+    font-size: 12px;
+  }
+}

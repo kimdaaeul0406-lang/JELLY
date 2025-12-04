@@ -24,6 +24,9 @@ const API_URL =
 const API_KEY =
   "37c76d375164de2a5b62d339534e9ed9417e99fb398695594f253508b4cfb42d";
 
+// 🔹 캐시 유효 시간 (5분)
+const CACHE_DURATION = 5 * 60 * 1000;
+
 // 🔹 API 응답 1개를 화면용 데이터로 변환하는 함수
 function mapApiItem(x) {
   const rawPrice = Number(x.clpr); // 종가
@@ -42,8 +45,8 @@ function mapApiItem(x) {
     symbol: x.srtnCd || x.isinCd || "정보 없음",
     price,
     change,
-    rate, // 등락률 숫자 (인기순 정렬용)
-    date: x.basDt || null, // 최신순 정렬용
+    rate,
+    date: x.basDt || null,
   };
 }
 
@@ -53,7 +56,7 @@ function mapApiItem(x) {
 function useIsMobile() {
   const [isMobile, setIsMobile] = useState(() => {
     if (typeof window === "undefined") return false;
-    return window.innerWidth <= 768; // 아이폰 프로맥스 포함
+    return window.innerWidth <= 768;
   });
 
   useEffect(() => {
@@ -69,37 +72,30 @@ function useIsMobile() {
 
 /* ─────────────────────────────────────
    🔍 검색 결과
-   - 데스크탑/태블릿: 10개씩 + 페이지 버튼
-   - 모바일: 무한 스크롤(10개씩 추가 로드)
    ───────────────────────────────────── */
 function SearchResultsSection({ query, results, loading, noResult, isMobile }) {
   const [page, setPage] = useState(1);
-  const [visibleCount, setVisibleCount] = useState(10); // 모바일에서 몇 개까지 보여줄지
+  const [visibleCount, setVisibleCount] = useState(10);
 
   const PAGE_SIZE = 10;
   const totalPages = Math.max(1, Math.ceil((results?.length || 0) / PAGE_SIZE));
 
-  // 검색어/결과 바뀔 때 초기화
   useEffect(() => {
     setPage(1);
     setVisibleCount(PAGE_SIZE);
   }, [query, results?.length]);
 
-  // 👉 데스크탑용: 현재 페이지에 보여줄 데이터
   const startIndex = (page - 1) * PAGE_SIZE;
   const endIndex = startIndex + PAGE_SIZE;
 
   let pageItems;
   if (isMobile) {
-    // 👉 모바일: 0 ~ visibleCount 까지만 보여줌 (무한 스크롤)
     const sliceCount = Math.min(visibleCount, results.length);
     pageItems = results.slice(0, sliceCount);
   } else {
-    // 👉 데스크탑: 페이지별로 자르기
     pageItems = results.slice(startIndex, endIndex);
   }
 
-  // 📱 모바일 전용: window 스크롤 위치 감지해서 바닥 근처면 더 로드
   useEffect(() => {
     if (!isMobile) return;
     if (results.length === 0) return;
@@ -111,10 +107,9 @@ function SearchResultsSection({ query, results, loading, noResult, isMobile }) {
         window.innerHeight || document.documentElement.clientHeight;
       const documentHeight = document.documentElement.scrollHeight;
 
-      // 바닥 근처로 내려오면
       if (scrollTop + windowHeight >= documentHeight - 100) {
         setVisibleCount((prev) => {
-          if (prev >= results.length) return prev; // 더 이상 없음
+          if (prev >= results.length) return prev;
           return Math.min(results.length, prev + PAGE_SIZE);
         });
       }
@@ -179,7 +174,6 @@ function SearchResultsSection({ query, results, loading, noResult, isMobile }) {
             </div>
           </div>
 
-          {/* 💻 데스크탑에서만 페이지 버튼 표시 */}
           {!isMobile && (
             <div
               style={{
@@ -222,28 +216,45 @@ function SearchResultsSection({ query, results, loading, noResult, isMobile }) {
 }
 
 /* ─────────────────────────────────────
-   📊 전체 종목 목록 (스크롤 + 페이지 인식)
+   📊 전체 종목 목록 (캐싱 적용)
    ───────────────────────────────────── */
 function AllStocksSection() {
   const [items, setItems] = useState([]);
   const [loadingAll, setLoadingAll] = useState(false);
   const [errorAll, setErrorAll] = useState("");
 
-  const [sortMode, setSortMode] = useState("popular"); // popular | latest | name
+  const [sortMode, setSortMode] = useState("popular");
   const [page, setPage] = useState(1);
 
   const PAGE_SIZE = 10;
   const listRef = useRef(null);
 
-  // ✅ 전체 목록용 데이터 한 번만 가져오기
+  // ✅ 캐싱 적용된 API 호출
   useEffect(() => {
     async function loadAll() {
+      // 캐시 확인
+      const cached = sessionStorage.getItem("allStocksCache");
+      const cacheTime = sessionStorage.getItem("allStocksCacheTime");
+      const now = Date.now();
+
+      // 캐시가 유효하면 사용
+      if (cached && cacheTime && now - Number(cacheTime) < CACHE_DURATION) {
+        try {
+          const parsed = JSON.parse(cached);
+          setItems(parsed);
+          return;
+        } catch (e) {
+          console.error("캐시 파싱 실패:", e);
+        }
+      }
+
+      // 캐시 없거나 만료됨 → API 호출
       setLoadingAll(true);
       setErrorAll("");
       try {
         const url =
           `${API_URL}?serviceKey=${API_KEY}` +
-          `&numOfRows=100&pageNo=1&resultType=json`; // 100개 정도만
+          `&numOfRows=100&pageNo=1&resultType=json`;
         const res = await fetch(url);
         const json = await res.json();
 
@@ -255,6 +266,10 @@ function AllStocksSection() {
           const arr = Array.isArray(itemsRaw) ? itemsRaw : [itemsRaw];
           const mapped = arr.map(mapApiItem);
           setItems(mapped);
+
+          // 캐시 저장
+          sessionStorage.setItem("allStocksCache", JSON.stringify(mapped));
+          sessionStorage.setItem("allStocksCacheTime", String(now));
         }
       } catch (err) {
         console.error("전체 목록 API 오류:", err);
@@ -268,12 +283,10 @@ function AllStocksSection() {
     loadAll();
   }, []);
 
-  // 정렬 적용
   const sortedItems = useMemo(() => {
     const arr = [...items];
 
     if (sortMode === "latest") {
-      // 기준일(YYYYMMDD) 내림차순
       arr.sort((a, b) => {
         const da = a.date || "";
         const db = b.date || "";
@@ -282,7 +295,6 @@ function AllStocksSection() {
     } else if (sortMode === "name") {
       arr.sort((a, b) => a.name.localeCompare(b.name, "ko-KR"));
     } else if (sortMode === "popular") {
-      // 등락률 절댓값 큰 순서대로
       arr.sort((a, b) => {
         const ra = a.rate == null ? -Infinity : Math.abs(a.rate);
         const rb = b.rate == null ? -Infinity : Math.abs(b.rate);
@@ -295,7 +307,6 @@ function AllStocksSection() {
 
   const totalPages = Math.max(1, Math.ceil(sortedItems.length / PAGE_SIZE));
 
-  // 정렬 변경 시 1페이지 + 맨 위로
   useEffect(() => {
     setPage(1);
     if (listRef.current) {
@@ -303,7 +314,6 @@ function AllStocksSection() {
     }
   }, [sortMode, sortedItems.length]);
 
-  // 스크롤 위치 → 페이지 번호
   function handleScroll(e) {
     const el = e.currentTarget;
     const { scrollTop, scrollHeight, clientHeight } = el;
@@ -314,8 +324,8 @@ function AllStocksSection() {
       return;
     }
 
-    const ratio = scrollTop / scrollable; // 0 ~ 1
-    const pageIndex = Math.floor(ratio * totalPages); // 0 ~ totalPages-1
+    const ratio = scrollTop / scrollable;
+    const pageIndex = Math.floor(ratio * totalPages);
     const pageNum = Math.min(totalPages, Math.max(1, pageIndex + 1));
 
     if (pageNum !== page) {
@@ -323,7 +333,6 @@ function AllStocksSection() {
     }
   }
 
-  // 페이지 버튼 → 해당 구간으로 스크롤 점프
   function goPage(target) {
     const el = listRef.current;
     setPage(target);
@@ -337,7 +346,7 @@ function AllStocksSection() {
       return;
     }
 
-    const ratio = (target - 1) / (totalPages - 1); // 0~1
+    const ratio = (target - 1) / (totalPages - 1);
     el.scrollTop = scrollable * ratio;
   }
 
@@ -347,13 +356,9 @@ function AllStocksSection() {
         <h2>📊 전체 종목 목록</h2>
         <p>
           공공데이터포털 API에서 가져온 <b>실제 종목 리스트</b>예요.
-          <br />
-          스크롤을 쭉 내리면 2, 3, … 페이지 구간을 지나가고, 아래 페이지
-          버튼으로 원하는 구간으로 바로 이동할 수 있어요.
         </p>
       </div>
 
-      {/* 정렬 탭 */}
       {sortedItems.length > 0 && (
         <div style={{ marginTop: 6, marginBottom: 6 }}>
           <div className="chart-tabs">
@@ -438,7 +443,6 @@ function AllStocksSection() {
             </div>
           </div>
 
-          {/* 페이지 버튼 – 단순히 위치 점프 + 현재 페이지 표시 */}
           <div
             style={{
               marginTop: 10,
@@ -487,28 +491,39 @@ function AllStocksSection() {
    ───────────────────────────────────── */
 export default function DashboardMarket({ searchHistory, onAddSearch }) {
   const [query, setQuery] = useState("");
-  const [results, setResults] = useState([]); // 검색 결과
-  const [loading, setLoading] = useState(false); // 검색 로딩
-  const [noResult, setNoResult] = useState(false); // “검색 결과 없음”
-  const [hotStocks, setHotStocks] = useState([]); // 인기 종목
+  const [results, setResults] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [noResult, setNoResult] = useState(false);
+  const [hotStocks, setHotStocks] = useState([]);
 
-  // 🔹 PC / 모바일 구분
   const isMobile = useIsMobile();
-
-  // 🔹 지금 어떤 화면인지
-  // "dashboard" = 요약 + 차트 + 인기 + 전체
-  // "search" = 검색 결과 전용 화면
   const [viewMode, setViewMode] = useState("dashboard");
 
-  // 🔥 인기 종목 3개 – 컴포넌트 처음 로드될 때 자동으로 API 호출
+  // 🔥 인기 종목 3개 (캐싱 적용)
   useEffect(() => {
     async function loadHotStocks() {
+      // 캐시 확인
+      const cached = sessionStorage.getItem("hotStocksCache");
+      const cacheTime = sessionStorage.getItem("hotStocksCacheTime");
+      const now = Date.now();
+
+      if (cached && cacheTime && now - Number(cacheTime) < CACHE_DURATION) {
+        try {
+          const parsed = JSON.parse(cached);
+          setHotStocks(parsed);
+          return;
+        } catch (e) {
+          console.error("캐시 파싱 실패:", e);
+        }
+      }
+
+      // API 호출
       try {
         const promises = HOT_CODES.map((code) => {
           const url =
             `${API_URL}?serviceKey=${API_KEY}` +
             `&numOfRows=1&pageNo=1&resultType=json` +
-            `&likeSrtnCd=${code}`; // 종목 코드 부분검색
+            `&likeSrtnCd=${code}`;
 
           return fetch(url)
             .then((res) => res.json())
@@ -526,6 +541,10 @@ export default function DashboardMarket({ searchHistory, onAddSearch }) {
 
         const loaded = (await Promise.all(promises)).filter(Boolean);
         setHotStocks(loaded);
+
+        // 캐시 저장
+        sessionStorage.setItem("hotStocksCache", JSON.stringify(loaded));
+        sessionStorage.setItem("hotStocksCacheTime", String(now));
       } catch (err) {
         console.error("인기 종목 로딩 전체 오류:", err);
       }
@@ -534,7 +553,6 @@ export default function DashboardMarket({ searchHistory, onAddSearch }) {
     loadHotStocks();
   }, []);
 
-  // 🔢 검색 순위 / 최근 검색
   const counts = {};
   searchHistory.forEach((q) => {
     counts[q] = (counts[q] || 0) + 1;
@@ -545,12 +563,10 @@ export default function DashboardMarket({ searchHistory, onAddSearch }) {
     .slice(0, 5)
     .map(([name]) => name);
 
-  // 🔙 대시보드로 돌아가기
   function handleBackToDashboard() {
     setViewMode("dashboard");
   }
 
-  // 🔍 검색 버튼
   async function handleSearch(e) {
     e.preventDefault();
     const raw = query.trim();
@@ -562,15 +578,13 @@ export default function DashboardMarket({ searchHistory, onAddSearch }) {
     setLoading(true);
     setNoResult(false);
     setResults([]);
-
-    // 🔥 검색을 시작하면 "검색 결과 페이지"로 전환
     setViewMode("search");
 
     try {
       const url =
         `${API_URL}?serviceKey=${API_KEY}` +
         `&numOfRows=100&pageNo=1&resultType=json` +
-        `&likeItmsNm=${encodeURIComponent(normalized)}`; // 종목명 부분검색
+        `&likeItmsNm=${encodeURIComponent(normalized)}`;
 
       const res = await fetch(url);
       const json = await res.json();
@@ -586,7 +600,6 @@ export default function DashboardMarket({ searchHistory, onAddSearch }) {
 
       const arr = Array.isArray(items) ? items : [items];
 
-      // ① 최신 기준일(basDt)만 남기기
       const latestBasDt = arr.reduce((max, x) => {
         if (!x.basDt) return max;
         if (!max) return x.basDt;
@@ -597,7 +610,6 @@ export default function DashboardMarket({ searchHistory, onAddSearch }) {
         ? arr.filter((x) => x.basDt === latestBasDt)
         : arr;
 
-      // ② 같은 종목코드(srtnCd)는 하나만
       const byCode = new Map();
       latestItems.forEach((x) => {
         const code = x.srtnCd || x.isinCd || x.itmsNm;
@@ -605,7 +617,6 @@ export default function DashboardMarket({ searchHistory, onAddSearch }) {
       });
       const uniqueItems = Array.from(byCode.values());
 
-      // ③ 화면용 데이터로 변환
       const list = uniqueItems.map(mapApiItem);
 
       if (list.length === 0) {
@@ -625,12 +636,8 @@ export default function DashboardMarket({ searchHistory, onAddSearch }) {
 
   return (
     <div className="dashboard-wrapper">
-      {/* ─────────────────────────────
-          1) 기본 대시보드 화면
-          ───────────────────────────── */}
       {viewMode === "dashboard" && (
         <>
-          {/* 상단 요약 카드 – 샘플 값 */}
           <section className="summary-row">
             <div className="summary-card">
               <div className="summary-label">KOSPI (샘플)</div>
@@ -649,7 +656,6 @@ export default function DashboardMarket({ searchHistory, onAddSearch }) {
             </div>
           </section>
 
-          {/* 메인 젤리 차트 영역 */}
           <section className="chart-section">
             <div className="chart-header">
               <h2>📈 오늘의 시장 차트</h2>
@@ -665,7 +671,6 @@ export default function DashboardMarket({ searchHistory, onAddSearch }) {
             </div>
           </section>
 
-          {/* 🔍 검색 + 검색 순위 */}
           <section className="search-section">
             <form onSubmit={handleSearch} className="search-form">
               <input
@@ -710,7 +715,6 @@ export default function DashboardMarket({ searchHistory, onAddSearch }) {
             </div>
           </section>
 
-          {/* 🔥 인기 종목 3개 */}
           <section className="stocks-section-real">
             <div className="stocks-header">
               <h2>🔥 인기 종목</h2>
@@ -752,14 +756,10 @@ export default function DashboardMarket({ searchHistory, onAddSearch }) {
             </div>
           </section>
 
-          {/* 📊 전체 종목 */}
           <AllStocksSection />
         </>
       )}
 
-      {/* ─────────────────────────────
-          2) 검색 결과 전용 화면
-          ───────────────────────────── */}
       {viewMode === "search" && (
         <div className="search-result-page">
           <div
@@ -785,7 +785,6 @@ export default function DashboardMarket({ searchHistory, onAddSearch }) {
             </h2>
           </div>
 
-          {/* 검색 결과 페이지에서도 검색 다시 가능 */}
           <form
             onSubmit={handleSearch}
             className="search-form"
@@ -802,7 +801,6 @@ export default function DashboardMarket({ searchHistory, onAddSearch }) {
             </button>
           </form>
 
-          {/* 검색 결과 리스트 (모바일: 무한 스크롤 / PC: 페이지 버튼) */}
           <SearchResultsSection
             isMobile={isMobile}
             query={query}

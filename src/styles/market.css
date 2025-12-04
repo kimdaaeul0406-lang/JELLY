@@ -1832,10 +1832,9 @@
   }
 }
 
-/* 📱 모바일: 리스트뷰 카드형 3줄 레이아웃 (가로 스크롤 X) */
-
-@media (max-width: 800px) {
-  /* 헤더 숨기고, tbody를 블록으로 */
+/* 📱 모바일: 리스트뷰 카드형 – 컴팩트 버전 */
+@media (max-width: 850px) {
+  /* 헤더 숨기고, tbody를 블록으로 전환 */
   .market-table thead {
     display: none;
   }
@@ -1844,7 +1843,7 @@
     display: block;
   }
 
-  /* 한 종목 = 카드 한 개 */
+  /* 한 종목 = 카드 한 장 */
   .market-row {
     display: grid;
     grid-template-areas:
@@ -1852,18 +1851,19 @@
       "price change"
       "trade trade";
     grid-template-columns: 1fr 1fr;
-    padding: 12px 10px 14px;
-    border-bottom: 1px solid #ececef;
+    padding: 10px 12px;
+    row-gap: 4px;
+    border-bottom: 1px solid #f1f1f5;
     background: #ffffff;
   }
 
   .market-row td {
     border: none;
-    padding: 4px 0;
+    padding: 2px 0;
     background: transparent;
   }
 
-  /* 1줄: 종목 이름 */
+  /* 1줄: 종목(이모지 + 이름 + 코드) */
   .market-row .col-name {
     grid-area: name;
   }
@@ -1872,42 +1872,52 @@
   .market-row .col-price {
     grid-area: price;
     text-align: left;
+    font-size: 13px;
   }
 
-  /* 2줄 오른쪽: 등락률 */
+  /* 2줄 오른쪽: 등락률 뱃지 */
   .market-row .col-change {
     grid-area: change;
     text-align: right;
   }
 
-  /* 보유현황은 모바일에서는 숨김 (원하면 살려도 됨) */
+  /* 모바일에서는 보유현황 칸은 숨김 */
   .market-row .col-holding {
     display: none;
   }
 
-  /* 3줄: 수량 + 매수/매도 */
+  /* 3줄: 수량 + 매수/매도 (한 줄에 정렬) */
   .market-row .col-trade {
     grid-area: trade;
     margin-top: 6px;
+    display: flex;
+    align-items: stretch;
+    gap: 6px;
   }
 
+  /* 수량 입력칸: 왼쪽 */
   .market-row .col-trade .qty-input {
-    width: 100%;
-    padding: 8px;
-    font-size: 14px;
-    margin-bottom: 5px;
+    flex: 0.9;
+    height: 32px;
+    padding: 0 8px;
+    font-size: 13px;
+    margin-bottom: 0; /* 위/아래로 안 떨어지게 */
     text-align: right;
     box-sizing: border-box;
   }
 
+  /* 매수/매도 버튼 묶음: 오른쪽 */
   .market-row .col-trade .trade-button-row {
+    flex: 1.1;
+    margin-top: 0;
     display: flex;
-    gap: 8px;
+    gap: 6px;
   }
 
   .market-row .col-trade .trade-btn {
     flex: 1;
-    padding: 10px 0;
-    font-size: 14px;
+    padding: 0;
+    height: 32px;
+    font-size: 13px;
   }
 }

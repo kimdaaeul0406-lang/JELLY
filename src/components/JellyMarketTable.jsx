@@ -29,47 +29,43 @@ export default function JellyMarketTable({
     );
   }
 
-  // 🔼 가장 많이 오른 종목
   const topRiser = [...boardStocks].sort(
     (a, b) => b.changeRate - a.changeRate
   )[0];
 
-  // 🔽 가장 많이 떨어진 종목
   const topFaller = [...boardStocks].sort(
     (a, b) => a.changeRate - b.changeRate
   )[0];
 
   function handleQtyChange(stockId, value) {
-    setQty((prev) => ({
-      ...prev,
-      [stockId]: value,
-    }));
+    setQty((prev) => ({ ...prev, [stockId]: value }));
   }
 
   function getHolding(stockId) {
-    if (!jellyPositions) return 0;
-    const pos = jellyPositions[stockId];
-    if (!pos) return 0;
-    return pos.qty || 0;
+    if (!jellyPositions) return null;
+    return jellyPositions[stockId] || null;
   }
 
-  function handleSort(nextKey) {
-    setSortKey(nextKey);
+  function calcPnL(holding, currentJellyPrice) {
+    if (!holding || holding.qty === 0) return null;
+    const avgPrice = holding.avgPriceJelly;
+    const pnl = (currentJellyPrice - avgPrice) * holding.qty;
+    const pnlPercent = ((currentJellyPrice - avgPrice) / avgPrice) * 100;
+    return { pnl, pnlPercent };
   }
 
   return (
     <section className="market-table-section">
-      {/* 헤더 + 시간 */}
+      {/* 헤더 */}
       <div className="market-table-header-row">
         <h2 className="market-section-title">리스트 보기</h2>
         <div className="market-table-time">업데이트: {nowTime}</div>
       </div>
 
-      {/* 🔥 실시간 상승 / 하락 TOP1 카드 + 그래프 */}
+      {/* 실시간 상승/하락 TOP 1 */}
       <div className="market-highlight-row">
-        {/* 상승 1종목 */}
         <div className="market-highlight-card up">
-          <div className="highlight-label">실시간 상승 TOP 1</div>
+          <div className="highlight-label">🔥 실시간 상승 TOP 1</div>
           <div className="highlight-main">
             <div className="highlight-emoji">{topRiser.emoji}</div>
             <div className="highlight-text">
@@ -79,7 +75,6 @@ export default function JellyMarketTable({
               </div>
             </div>
           </div>
-
           <div className="highlight-price">
             <span className="highlight-price-main">
               {topRiser.priceWon.toLocaleString("ko-KR")}원
@@ -88,8 +83,6 @@ export default function JellyMarketTable({
               {formatRate(topRiser.changeRate)}
             </span>
           </div>
-
-          {/* 🔹 상승 종목 미니 그래프 */}
           <div className="highlight-chart">
             <JellyMarketChart
               history={topRiser.history || [topRiser.priceWon]}
@@ -99,9 +92,8 @@ export default function JellyMarketTable({
           </div>
         </div>
 
-        {/* 하락 1종목 */}
         <div className="market-highlight-card down">
-          <div className="highlight-label">실시간 하락 TOP 1</div>
+          <div className="highlight-label">💧 실시간 하락 TOP 1</div>
           <div className="highlight-main">
             <div className="highlight-emoji">{topFaller.emoji}</div>
             <div className="highlight-text">
@@ -111,7 +103,6 @@ export default function JellyMarketTable({
               </div>
             </div>
           </div>
-
           <div className="highlight-price">
             <span className="highlight-price-main">
               {topFaller.priceWon.toLocaleString("ko-KR")}원
@@ -120,8 +111,6 @@ export default function JellyMarketTable({
               {formatRate(topFaller.changeRate)}
             </span>
           </div>
-
-          {/* 🔹 하락 종목 미니 그래프 */}
           <div className="highlight-chart">
             <JellyMarketChart
               history={topFaller.history || [topFaller.priceWon]}
@@ -132,156 +121,121 @@ export default function JellyMarketTable({
         </div>
       </div>
 
-      {/* 정렬 탭 */}
-      <div className="market-table-sort-row">
-        <button
-          className={
-            sortKey === "name" ? "sort-chip sort-chip-active" : "sort-chip"
-          }
-          onClick={() => handleSort("name")}
-        >
-          이름순
-        </button>
-        <button
-          className={
-            sortKey === "change" ? "sort-chip sort-chip-active" : "sort-chip"
-          }
-          onClick={() => handleSort("change")}
-        >
-          등락률순
-        </button>
-      </div>
-
-      {/* 실제 리스트 테이블 */}
+      {/* 종목 리스트 테이블 */}
       <div className="market-table-wrapper">
-        <table className="market-table">
+        <table className="market-table market-table-fixed">
           <thead>
             <tr>
-              <th>종목</th>
-              <th>현재가</th>
-              <th>등락률</th>
-              <th>분위기</th>
-              <th>보유수량</th>
-              <th>매수/매도</th>
-              <th>맨위/맨아래</th>
+              <th className="col-name">종목</th>
+              <th className="col-price">현재가</th>
+              <th className="col-change">등락률</th>
+              <th className="col-holding">보유 현황</th>
+              <th className="col-trade">매수/매도</th>
             </tr>
           </thead>
           <tbody>
             {boardStocks.map((stock) => {
               const jellyPrice = priceToJelly(stock.priceWon);
               const holding = getHolding(stock.id);
+              const holdingQty = holding?.qty || 0;
               const inputVal = qty[stock.id] ?? "";
-
+              const inputQty = Number(inputVal) || 0;
               const isUp = stock.changeRate >= 0;
+              const pnlInfo = holding ? calcPnL(holding, jellyPrice) : null;
 
               return (
-                <tr
-                  key={stock.id}
-                  className={
-                    selectedStock && selectedStock.id === stock.id
-                      ? "market-row selected"
-                      : "market-row"
-                  }
-                  onClick={() => setSelectedStockId(stock.id)}
-                >
-                  {/* 종목명 */}
-                  <td className="market-cell-name">
-                    <div className="cell-main-name">
+                <tr key={stock.id} className="market-row">
+                  {/* 종목 */}
+                  <td className="col-name">
+                    <div className="cell-stock">
                       <span className="cell-emoji">{stock.emoji}</span>
-                      <span className="cell-name-text">{stock.name}</span>
+                      <div className="cell-stock-info">
+                        <span className="cell-name">{stock.name}</span>
+                        <span className="cell-id">{stock.id}</span>
+                      </div>
                     </div>
-                    <div className="cell-sub-id">{stock.id}</div>
                   </td>
 
                   {/* 현재가 */}
-                  <td className="market-cell-price">
+                  <td className="col-price">
                     <div className="cell-price-won">
                       {stock.priceWon.toLocaleString("ko-KR")}원
                     </div>
                     <div className="cell-price-jelly">
-                      ≈ {jellyPrice.toLocaleString("ko-KR")} J
+                      {jellyPrice.toLocaleString("ko-KR")} J
                     </div>
                   </td>
 
                   {/* 등락률 */}
-                  <td className="market-cell-change">
-                    <span
-                      className={isUp ? "change-badge up" : "change-badge down"}
-                    >
+                  <td className="col-change">
+                    <span className={`change-badge ${isUp ? "up" : "down"}`}>
                       {formatRate(stock.changeRate)}
                     </span>
                   </td>
 
-                  {/* 분위기 */}
-                  <td className="market-cell-mood">
-                    <span className="mood-badge">{moodLabel(stock.mood)}</span>
+                  {/* 보유 현황 */}
+                  <td className="col-holding">
+                    {holding && holdingQty > 0 ? (
+                      <div className="cell-holding">
+                        <div className="cell-holding-qty">
+                          {holdingQty}주 보유
+                        </div>
+                        <div className="cell-holding-avg">
+                          평균 {holding.avgPriceJelly} J
+                        </div>
+                        {pnlInfo && (
+                          <div
+                            className={`cell-holding-pnl ${
+                              pnlInfo.pnl >= 0 ? "up" : "down"
+                            }`}
+                          >
+                            {pnlInfo.pnl >= 0 ? "+" : ""}
+                            {pnlInfo.pnl.toFixed(0)} J (
+                            {pnlInfo.pnl >= 0 ? "+" : ""}
+                            {pnlInfo.pnlPercent.toFixed(1)}%)
+                          </div>
+                        )}
+                      </div>
+                    ) : (
+                      <div className="cell-holding-empty">미보유</div>
+                    )}
                   </td>
 
-                  {/* 보유 수량 */}
-                  <td className="market-cell-holding">
-                    {holding.toLocaleString("ko-KR")}주
-                  </td>
-
-                  {/* 매수 / 매도 */}
-                  <td className="market-cell-trade">
-                    <input
-                      type="number"
-                      min="1"
-                      max="10000"
-                      className="qty-input"
-                      value={inputVal}
-                      onChange={(e) =>
-                        handleQtyChange(stock.id, e.target.value)
-                      }
-                      onClick={(e) => e.stopPropagation()}
-                      aria-label={`${stock.name} 매수/매도 수량 입력`}
-                    />
-                    <div className="trade-button-row">
-                      <button
-                        className="trade-btn buy"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          onBuy(stock, jellyPrice);
-                        }}
-                        aria-label={`${stock.name} 매수`}
-                      >
-                        매수
-                      </button>
-                      <button
-                        className="trade-btn sell"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          onSell(stock, jellyPrice);
-                        }}
-                        disabled={holding === 0}
-                        aria-label={`${stock.name} 매도`}
-                        title={holding === 0 ? "보유 종목이 아니에요" : ""}
-                      >
-                        매도
-                      </button>
+                  {/* 매수/매도 */}
+                  <td className="col-trade">
+                    <div className="cell-trade">
+                      <input
+                        type="number"
+                        min="1"
+                        max="10000"
+                        className="trade-qty-input"
+                        value={inputVal}
+                        onChange={(e) =>
+                          handleQtyChange(stock.id, e.target.value)
+                        }
+                        placeholder="수량"
+                      />
+                      {inputQty > 0 && (
+                        <div className="trade-preview-mini">
+                          = {(jellyPrice * inputQty).toLocaleString("ko-KR")} J
+                        </div>
+                      )}
+                      <div className="trade-btn-group">
+                        <button
+                          className="trade-btn-buy"
+                          onClick={() => onBuy(stock, jellyPrice)}
+                        >
+                          매수
+                        </button>
+                        <button
+                          className="trade-btn-sell"
+                          onClick={() => onSell(stock, jellyPrice)}
+                          disabled={holdingQty === 0}
+                        >
+                          매도
+                        </button>
+                      </div>
                     </div>
-                  </td>
-
-                  {/* 맨위/맨아래 */}
-                  <td className="market-cell-top">
-                    <button
-                      className="top-btn"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        topUpStock(stock.id);
-                      }}
-                    >
-                      ↑
-                    </button>
-                    <button
-                      className="top-btn"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        topDownStock(stock.id);
-                      }}
-                    >
-                      ↓
-                    </button>
                   </td>
                 </tr>
               );

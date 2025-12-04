@@ -15,6 +15,17 @@ export default function JellyMarketCards({
   onBuy,
   onSell,
 }) {
+  function calcPnL(holding, currentJellyPrice) {
+    if (!holding || holding.qty === 0) return null;
+    const avgPrice = holding.avgPriceJelly;
+    const pnl = (currentJellyPrice - avgPrice) * holding.qty;
+    const pnlPercent = ((currentJellyPrice - avgPrice) / avgPrice) * 100;
+    return { pnl, pnlPercent };
+  }
+
+  // 등락률순으로 정렬된 전체 종목
+  const allStocksSorted = [...topGainers, ...visibleCardStocks];
+
   return (
     <>
       {/* 실시간 상승률 TOP 2 */}
@@ -27,6 +38,7 @@ export default function JellyMarketCards({
           {topGainers.map((stock) => {
             const jellyPrice = priceToJelly(stock.priceWon);
             const holding = jellyPositions[stock.id] || null;
+            const holdingQty = holding?.qty || 0;
             const history = stock.history || [stock.priceWon];
             const min = Math.min(...history);
             const max = Math.max(...history);
@@ -34,6 +46,7 @@ export default function JellyMarketCards({
             const isUp = stock.changeRate > 0;
             const isDown = stock.changeRate < 0;
             const changeText = formatRate(stock.changeRate);
+            const pnlInfo = holding ? calcPnL(holding, jellyPrice) : null;
 
             return (
               <article key={stock.id} className="stock-card featured-card">
@@ -61,7 +74,7 @@ export default function JellyMarketCards({
                   <div className="stock-price featured-price">
                     ₩ {stock.priceWon.toLocaleString("ko-KR")}
                     <span className="stock-price-note">
-                      &nbsp;/ 1주 (필요 {jellyPrice} J)
+                      &nbsp;/ 1주 ({jellyPrice} J)
                     </span>
                   </div>
                 </div>
@@ -80,27 +93,43 @@ export default function JellyMarketCards({
                 </div>
 
                 <div className="stock-holding">
-                  {holding ? (
-                    <div>
-                      <div>
-                        보유 수량: <strong>{holding.qty}주</strong>
+                  {holding && holdingQty > 0 ? (
+                    <div className="holding-info-card">
+                      <div className="holding-row">
+                        <span>보유 수량:</span>
+                        <strong>{holdingQty}주</strong>
                       </div>
-                      <div>
-                        평균 매수가: <strong>{holding.avgPriceJelly} J</strong>
+                      <div className="holding-row">
+                        <span>평균 매수가:</span>
+                        <strong>
+                          {holding.avgPriceJelly.toLocaleString("ko-KR")} J
+                        </strong>
                       </div>
+                      <div className="holding-row">
+                        <span>현재가:</span>
+                        <strong>{jellyPrice.toLocaleString("ko-KR")} J</strong>
+                      </div>
+                      {pnlInfo && (
+                        <div
+                          className={`holding-pnl-row ${
+                            pnlInfo.pnl >= 0 ? "up" : "down"
+                          }`}
+                        >
+                          <span>평가 손익:</span>
+                          <strong>
+                            {pnlInfo.pnl >= 0 ? "+" : ""}
+                            {pnlInfo.pnl.toLocaleString("ko-KR")} J (
+                            {pnlInfo.pnl >= 0 ? "+" : ""}
+                            {pnlInfo.pnlPercent.toFixed(1)}%)
+                          </strong>
+                        </div>
+                      )}
                     </div>
                   ) : (
-                    <div>아직 보유 중이 아니에요.</div>
+                    <div className="holding-empty-card">
+                      아직 보유 중이 아니에요.
+                    </div>
                   )}
-                </div>
-
-                <div className="trade-box view-only">
-                  <div className="trade-info">
-                    현재가: <strong>{jellyPrice.toLocaleString("ko-KR")} J</strong>
-                  </div>
-                  <div className="trade-hint">
-                    💡 거래는 리스트 보기에서 가능해요
-                  </div>
                 </div>
               </article>
             );
@@ -108,34 +137,13 @@ export default function JellyMarketCards({
         </div>
       </section>
 
-      {/* 전체 젤리 종목 (카드) */}
+      {/* 전체 젤리 종목 (등락률순 고정) */}
       <section className="stocks-section">
         <div className="stocks-header">
           <h2>전체 젤리 종목</h2>
-          <p>등락률이나 이름 기준으로 정렬해서 볼 수 있어요.</p>
-        </div>
-
-        <div className="market-table-sort-row">
-          <button
-            className={
-              sortKey === "name" ? "sort-chip sort-chip-active" : "sort-chip"
-            }
-            onClick={() => setSortKey("name")}
-            aria-label="이름순 정렬"
-            aria-pressed={sortKey === "name"}
-          >
-            이름순
-          </button>
-          <button
-            className={
-              sortKey === "change" ? "sort-chip sort-chip-active" : "sort-chip"
-            }
-            onClick={() => setSortKey("change")}
-            aria-label="등락률순 정렬"
-            aria-pressed={sortKey === "change"}
-          >
-            등락률순
-          </button>
+          <p>
+            등락률순으로 정렬되어 있어요. 매수/매도는 리스트 보기에서 가능해요.
+          </p>
         </div>
 
         <div className="stocks-grid">
@@ -146,6 +154,7 @@ export default function JellyMarketCards({
           {visibleCardStocks.map((stock) => {
             const jellyPrice = priceToJelly(stock.priceWon);
             const holding = jellyPositions[stock.id] || null;
+            const holdingQty = holding?.qty || 0;
             const history = stock.history || [stock.priceWon];
             const min = Math.min(...history);
             const max = Math.max(...history);
@@ -153,6 +162,7 @@ export default function JellyMarketCards({
             const isUp = stock.changeRate > 0;
             const isDown = stock.changeRate < 0;
             const changeText = formatRate(stock.changeRate);
+            const pnlInfo = holding ? calcPnL(holding, jellyPrice) : null;
 
             return (
               <article key={stock.id} className="stock-card">
@@ -178,7 +188,7 @@ export default function JellyMarketCards({
                 <div className="stock-price">
                   ₩ {stock.priceWon.toLocaleString("ko-KR")}
                   <span className="stock-price-note">
-                    &nbsp;/ 1주 (필요 {jellyPrice} J)
+                    &nbsp;/ 1주 ({jellyPrice} J)
                   </span>
                 </div>
 
@@ -196,27 +206,37 @@ export default function JellyMarketCards({
                 </div>
 
                 <div className="stock-holding">
-                  {holding ? (
-                    <div>
-                      <div>
-                        보유 수량: <strong>{holding.qty}주</strong>
+                  {holding && holdingQty > 0 ? (
+                    <div className="holding-info-card">
+                      <div className="holding-row">
+                        <span>보유:</span>
+                        <strong>{holdingQty}주</strong>
                       </div>
-                      <div>
-                        평균 매수가: <strong>{holding.avgPriceJelly} J</strong>
+                      <div className="holding-row">
+                        <span>평균 매수가:</span>
+                        <strong>
+                          {holding.avgPriceJelly.toLocaleString("ko-KR")} J
+                        </strong>
                       </div>
+                      {pnlInfo && (
+                        <div
+                          className={`holding-pnl-row ${
+                            pnlInfo.pnl >= 0 ? "up" : "down"
+                          }`}
+                        >
+                          <span>손익:</span>
+                          <strong>
+                            {pnlInfo.pnl >= 0 ? "+" : ""}
+                            {pnlInfo.pnl.toLocaleString("ko-KR")} J (
+                            {pnlInfo.pnl >= 0 ? "+" : ""}
+                            {pnlInfo.pnlPercent.toFixed(1)}%)
+                          </strong>
+                        </div>
+                      )}
                     </div>
                   ) : (
-                    <div>아직 보유 중이 아니에요.</div>
+                    <div className="holding-empty-card">미보유</div>
                   )}
-                </div>
-
-                <div className="trade-box view-only">
-                  <div className="trade-info">
-                    현재가: <strong>{jellyPrice.toLocaleString("ko-KR")} J</strong>
-                  </div>
-                  <div className="trade-hint">
-                    💡 거래는 리스트 보기에서 가능해요
-                  </div>
                 </div>
               </article>
             );

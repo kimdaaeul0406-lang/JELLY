@@ -1676,3 +1676,491 @@
     height: 56px;
   }
 }
+/* ─────────────────────────── */
+/* 보유 현황 & 손익 정보 스타일 */
+/* ─────────────────────────── */
+
+.holding-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.holding-qty {
+  font-size: 12px;
+  color: var(--text-main);
+}
+
+.holding-detail {
+  font-size: 11px;
+  color: var(--text-sub);
+}
+
+.holding-pnl {
+  font-size: 11px;
+  font-weight: 600;
+  margin-top: 2px;
+}
+
+.holding-pnl.up {
+  color: var(--jelly-blue);
+}
+
+.holding-pnl.down {
+  color: var(--jelly-red);
+}
+
+.holding-empty {
+  font-size: 11px;
+  color: var(--text-sub);
+  opacity: 0.7;
+}
+
+.trade-preview {
+  margin: 4px 0;
+  padding: 4px 6px;
+  background: #f8f5ff;
+  border-radius: 6px;
+  font-size: 10px;
+}
+
+.trade-preview-buy {
+  color: var(--jelly-blue);
+  margin-bottom: 2px;
+}
+
+.trade-preview-sell {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.trade-preview-sell.up {
+  color: var(--jelly-blue);
+}
+
+.trade-preview-sell.down {
+  color: var(--jelly-red);
+}
+
+.trade-preview-pnl {
+  font-size: 9px;
+  opacity: 0.9;
+}
+
+.holding-info-card {
+  background: #f8f5ff;
+  border-radius: 8px;
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.holding-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+}
+
+.holding-row span {
+  color: var(--text-sub);
+}
+
+.holding-row strong {
+  color: var(--text-main);
+}
+
+.holding-pnl-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  padding-top: 4px;
+  border-top: 1px dashed rgba(230, 214, 245, 0.5);
+  margin-top: 2px;
+}
+
+.holding-pnl-row span {
+  color: var(--text-sub);
+}
+
+.holding-pnl-row.up strong {
+  color: var(--jelly-blue);
+}
+
+.holding-pnl-row.down strong {
+  color: var(--jelly-red);
+}
+
+.holding-empty-card {
+  font-size: 12px;
+  color: var(--text-sub);
+  text-align: center;
+  padding: 8px;
+  background: #f8f8fc;
+  border-radius: 8px;
+}
+
+.trade-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.trade-preview-card {
+  background: #fffdf4;
+  border: 1px solid #f7eed4;
+  border-radius: 8px;
+  padding: 6px 8px;
+  margin-bottom: 8px;
+}
+
+.preview-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11px;
+  padding: 2px 0;
+}
+
+.preview-item span {
+  color: var(--text-sub);
+}
+
+.preview-item strong {
+  color: var(--text-main);
+}
+
+.preview-item.up strong {
+  color: var(--jelly-blue);
+}
+
+.preview-item.down strong {
+  color: var(--jelly-red);
+}
+
+.preview-pnl {
+  font-size: 10px;
+  margin-left: 4px;
+  opacity: 0.9;
+}
+
+.trade-btn-wrap {
+  display: flex;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.trade-btn {
+  flex: 1;
+  border-radius: 8px;
+  border: none;
+  padding: 8px 0;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.trade-btn.buy {
+  background: var(--jelly-blue);
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(63, 127, 211, 0.25);
+}
+
+.trade-btn.buy:hover {
+  background: #2d6bb3;
+  transform: translateY(-1px);
+}
+
+.trade-btn.sell {
+  background: #fff0f3;
+  color: var(--jelly-red);
+  border: 1px solid rgba(224, 91, 111, 0.3);
+}
+
+.trade-btn.sell:hover:not(:disabled) {
+  background: #ffe4e8;
+  transform: translateY(-1px);
+}
+
+.trade-btn.sell:disabled {
+  background: #f5f5f5;
+  color: #bbb;
+  border-color: #e5e5e5;
+  cursor: not-allowed;
+}
+
+.qty-input {
+  width: 70px;
+  padding: 6px 8px;
+  border-radius: 8px;
+  border: 1px solid #e4d7f1;
+  font-size: 12px;
+  text-align: center;
+  outline: none;
+}
+
+.qty-input:focus {
+  border-color: var(--jelly-blue);
+  box-shadow: 0 0 0 2px rgba(63, 127, 211, 0.1);
+}
+
+.qty-input::placeholder {
+  color: #bbb;
+  font-size: 11px;
+}
+/* ─────────────────────────── */
+/* 보유 현황 & 손익 스타일     */
+/* ─────────────────────────── */
+
+.holding-info-card {
+  background: #f8f5ff;
+  border-radius: 8px;
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.holding-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+}
+
+.holding-row span {
+  color: var(--text-sub);
+}
+
+.holding-row strong {
+  color: var(--text-main);
+}
+
+.holding-pnl-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  padding-top: 4px;
+  border-top: 1px dashed rgba(230, 214, 245, 0.5);
+  margin-top: 2px;
+}
+
+.holding-pnl-row span {
+  color: var(--text-sub);
+}
+
+.holding-pnl-row.up strong {
+  color: var(--jelly-blue);
+}
+
+.holding-pnl-row.down strong {
+  color: var(--jelly-red);
+}
+
+.holding-empty-card {
+  font-size: 12px;
+  color: var(--text-sub);
+  text-align: center;
+  padding: 8px;
+  background: #f8f8fc;
+  border-radius: 8px;
+}
+
+/* ─────────────────────────── */
+/* 리스트 테이블 고정 크기     */
+/* ─────────────────────────── */
+
+.market-table-fixed {
+  table-layout: fixed;
+  width: 100%;
+}
+
+.market-table-fixed th,
+.market-table-fixed td {
+  padding: 12px 8px;
+  vertical-align: middle;
+}
+
+.market-table-fixed .col-name {
+  width: 25%;
+}
+
+.market-table-fixed .col-price {
+  width: 18%;
+  text-align: center;
+}
+
+.market-table-fixed .col-change {
+  width: 12%;
+  text-align: center;
+}
+
+.market-table-fixed .col-holding {
+  width: 22%;
+}
+
+.market-table-fixed .col-trade {
+  width: 23%;
+}
+
+/* 종목 셀 */
+.cell-stock {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cell-emoji {
+  font-size: 24px;
+}
+
+.cell-stock-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.cell-name {
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.cell-id {
+  font-size: 11px;
+  color: var(--text-sub);
+}
+
+/* 가격 셀 */
+.cell-price-won {
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.cell-price-jelly {
+  font-size: 11px;
+  color: var(--text-sub);
+}
+
+/* 보유 현황 셀 */
+.cell-holding {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.cell-holding-qty {
+  font-weight: 600;
+  font-size: 12px;
+}
+
+.cell-holding-avg {
+  font-size: 11px;
+  color: var(--text-sub);
+}
+
+.cell-holding-pnl {
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.cell-holding-pnl.up {
+  color: var(--jelly-blue);
+}
+
+.cell-holding-pnl.down {
+  color: var(--jelly-red);
+}
+
+.cell-holding-empty {
+  font-size: 12px;
+  color: var(--text-sub);
+}
+
+/* 매수/매도 셀 */
+.cell-trade {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.trade-qty-input {
+  width: 100%;
+  padding: 6px 8px;
+  border-radius: 6px;
+  border: 1px solid #e4d7f1;
+  font-size: 12px;
+  text-align: center;
+}
+
+.trade-qty-input:focus {
+  border-color: var(--jelly-blue);
+  outline: none;
+}
+
+.trade-preview-mini {
+  font-size: 10px;
+  color: var(--jelly-blue);
+  text-align: center;
+}
+
+.trade-btn-group {
+  display: flex;
+  gap: 4px;
+}
+
+.trade-btn-buy,
+.trade-btn-sell {
+  flex: 1;
+  padding: 6px 0;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+}
+
+.trade-btn-buy {
+  background: var(--jelly-blue);
+  color: #fff;
+}
+
+.trade-btn-buy:hover {
+  background: #2d6bb3;
+}
+
+.trade-btn-sell {
+  background: #fff0f3;
+  color: var(--jelly-red);
+  border: 1px solid rgba(224, 91, 111, 0.3);
+}
+
+.trade-btn-sell:hover:not(:disabled) {
+  background: #ffe4e8;
+}
+
+.trade-btn-sell:disabled {
+  background: #f5f5f5;
+  color: #bbb;
+  cursor: not-allowed;
+}
+
+/* 반응형 */
+@media (max-width: 768px) {
+  .market-table-fixed .col-name {
+    width: 30%;
+  }
+
+  .market-table-fixed .col-holding {
+    display: none;
+  }
+
+  .market-table-fixed .col-trade {
+    width: 35%;
+  }
+}

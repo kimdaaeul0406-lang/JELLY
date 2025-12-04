@@ -1841,3 +1841,23 @@
     min-width: 540px; /* 화면보다 살짝 넓게 → 옆으로 스크롤 */
   }
 }
+/* 📱 더 좁은 모바일에서는 등락률 칸 숨기고 매수/수량 칸 넓히기 */
+@media (max-width: 600px) {
+  /* 등락률(th/td) 통째로 숨기기 */
+  .market-table-fixed .col-change {
+    display: none;
+  }
+
+  /* 남은 칸들 다시 넓게 배분 */
+  .market-table-fixed .col-name {
+    width: 35%;
+  }
+
+  .market-table-fixed .col-price {
+    width: 20%;
+  }
+
+  .market-table-fixed .col-trade {
+    width: 45%;
+  }
+}

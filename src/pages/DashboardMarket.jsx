@@ -755,10 +755,13 @@ export default function DashboardMarket({ searchHistory, onAddSearch }) {
               ))}
             </div>
           </section>
-
-          <AllStocksSection />
         </>
       )}
+
+      {/* 🔵 전체 종목 섹션은 항상 마운트해 두고, dashboard일 때만 보여 주기 */}
+      <div style={{ display: viewMode === "dashboard" ? "block" : "none" }}>
+        <AllStocksSection />
+      </div>
 
       {viewMode === "search" && (
         <div className="search-result-page">

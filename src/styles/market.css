@@ -1878,3 +1878,32 @@
     font-size: 11px;
   }
 }
+/* ✅ 리스트뷰: 수량 + 매수/매도 항상 가로 한 줄 배치 */
+.market-table td.col-trade {
+  display: flex; /* td를 가로 플렉스로 */
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px; /* 수량과 버튼 사이 간격 */
+}
+
+/* 수량 입력 칸 */
+.market-table td.col-trade .qty-input {
+  width: 70px; /* 너무 넓지 않게 고정 */
+  min-width: 60px;
+  padding: 4px 6px;
+  box-sizing: border-box;
+}
+
+/* 버튼 묶음 */
+.market-table td.col-trade .trade-button-row {
+  display: flex;
+  flex: 1;
+  gap: 4px;
+  margin-top: 0; /* 위로 떨어지는 여백 제거 */
+}
+
+/* 매수 / 매도 버튼을 가로로 꽉 채우기 */
+.market-table td.col-trade .trade-btn {
+  flex: 1;
+  padding: 6px 0;
+}

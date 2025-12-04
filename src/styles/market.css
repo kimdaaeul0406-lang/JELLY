@@ -1861,3 +1861,50 @@
     width: 45%;
   }
 }
+/* 📱 카드뷰 모바일 수량 + 매수 버튼 깨짐 방지 */
+@media (max-width: 600px) {
+  /* trade-box 전체를 두 줄 컬럼으로 */
+  .stock-card .trade-box {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  /* 수량 입력 + 라벨 */
+  .stock-card .trade-box .trade-label,
+  .stock-card .trade-box .trade-input {
+    font-size: 13px;
+  }
+
+  .stock-card .trade-box .trade-input {
+    width: 100%;
+    padding: 8px;
+    font-size: 14px;
+  }
+
+  /* 매수/매도 버튼을 한 줄로 크게 */
+  .stock-card .trade-btn-wrap {
+    display: flex;
+    width: 100%;
+    gap: 8px;
+  }
+
+  .stock-card .trade-buy-btn,
+  .stock-card .trade-sell-btn {
+    flex: 1;
+    padding: 10px 0;
+    font-size: 14px;
+  }
+
+  /* 등락률 뱃지 겹침 방지 */
+  .stock-card .stock-change {
+    font-size: 12px;
+    margin-left: auto;
+    margin-top: 4px;
+  }
+
+  /* 카드 전체 좌우 패딩 줄여서 공간 확보 */
+  .stock-card {
+    padding: 12px 10px;
+  }
+}

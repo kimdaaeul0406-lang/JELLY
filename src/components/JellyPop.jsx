@@ -31,8 +31,8 @@ export default function JellyPop({ onComplete }) {
       this.rotation = Math.random() * Math.PI * 2;
       this.rotationSpeed = (Math.random() - 0.5) * 0.3;
 
-      // 60% 젤리빈, 40% 곰돌이
-      this.isBean = Math.random() > 0.4;
+      // 40% 젤리빈, 60% 곰돌이 (곰돌이를 더 많이!)
+      this.isBean = Math.random() > 0.6;
       this.color = COLORS[Math.floor(Math.random() * COLORS.length)];
       this.bounceCount = 0;
     }
@@ -87,75 +87,149 @@ export default function JellyPop({ onComplete }) {
         ctx.fillStyle = "rgba(255,255,255,0.65)";
         ctx.fill();
       } else {
-        // 하리보 곰돌이 느낌 (단순화)
+        // 하리보 곰돌이 느낌 (더 귀엽게!)
         ctx.fillStyle = this.color;
 
-        // 머리
-        ctx.beginPath();
-        ctx.arc(0, 0, this.size * 0.35, 0, Math.PI * 2);
-        ctx.fill();
-
-        // 귀
-        ctx.beginPath();
-        ctx.arc(
-          -this.size * 0.25,
-          -this.size * 0.25,
-          this.size * 0.14,
-          0,
-          Math.PI * 2
-        );
-        ctx.arc(
-          this.size * 0.25,
-          -this.size * 0.25,
-          this.size * 0.14,
-          0,
-          Math.PI * 2
-        );
-        ctx.fill();
-
-        // 몸통
+        // 몸통 (더 크고 둥글게)
         ctx.beginPath();
         ctx.ellipse(
           0,
-          this.size * 0.45,
-          this.size * 0.3,
+          this.size * 0.25,
           this.size * 0.4,
+          this.size * 0.5,
           0,
           0,
           Math.PI * 2
         );
         ctx.fill();
 
-        // 팔
+        // 머리 (몸통보다 약간 작게)
+        ctx.beginPath();
+        ctx.arc(0, -this.size * 0.15, this.size * 0.4, 0, Math.PI * 2);
+        ctx.fill();
+
+        // 귀 (더 크고 귀엽게)
         ctx.beginPath();
         ctx.arc(
+          -this.size * 0.3,
           -this.size * 0.35,
-          this.size * 0.35,
-          this.size * 0.13,
-          0,
-          Math.PI * 2
-        );
-        ctx.arc(
-          this.size * 0.35,
-          this.size * 0.35,
-          this.size * 0.13,
-          0,
-          Math.PI * 2
-        );
-        ctx.fill();
-
-        // 투명한 하이라이트
-        ctx.globalAlpha = this.alpha * 0.4;
-        ctx.beginPath();
-        ctx.arc(
-          -this.size * 0.1,
-          -this.size * 0.05,
           this.size * 0.18,
           0,
+          Math.PI * 2
+        );
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(
+          this.size * 0.3,
+          -this.size * 0.35,
+          this.size * 0.18,
           0,
           Math.PI * 2
         );
-        ctx.fillStyle = "rgba(255,255,255,0.85)";
+        ctx.fill();
+
+        // 귀 안쪽 (더 귀엽게)
+        ctx.fillStyle = "rgba(255,255,255,0.3)";
+        ctx.beginPath();
+        ctx.arc(
+          -this.size * 0.3,
+          -this.size * 0.35,
+          this.size * 0.1,
+          0,
+          Math.PI * 2
+        );
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(
+          this.size * 0.3,
+          -this.size * 0.35,
+          this.size * 0.1,
+          0,
+          Math.PI * 2
+        );
+        ctx.fill();
+
+        // 팔 (더 크게)
+        ctx.fillStyle = this.color;
+        ctx.beginPath();
+        ctx.arc(
+          -this.size * 0.4,
+          this.size * 0.2,
+          this.size * 0.15,
+          0,
+          Math.PI * 2
+        );
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(
+          this.size * 0.4,
+          this.size * 0.2,
+          this.size * 0.15,
+          0,
+          Math.PI * 2
+        );
+        ctx.fill();
+
+        // 다리 (작고 귀엽게)
+        ctx.beginPath();
+        ctx.arc(
+          -this.size * 0.2,
+          this.size * 0.6,
+          this.size * 0.12,
+          0,
+          Math.PI * 2
+        );
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(
+          this.size * 0.2,
+          this.size * 0.6,
+          this.size * 0.12,
+          0,
+          Math.PI * 2
+        );
+        ctx.fill();
+
+        // 눈 (작고 귀엽게)
+        ctx.fillStyle = "rgba(0,0,0,0.6)";
+        ctx.beginPath();
+        ctx.arc(
+          -this.size * 0.12,
+          -this.size * 0.1,
+          this.size * 0.08,
+          0,
+          Math.PI * 2
+        );
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(
+          this.size * 0.12,
+          -this.size * 0.1,
+          this.size * 0.08,
+          0,
+          Math.PI * 2
+        );
+        ctx.fill();
+
+        // 코 (작고 귀엽게)
+        ctx.fillStyle = "rgba(0,0,0,0.4)";
+        ctx.beginPath();
+        ctx.arc(0, this.size * 0.02, this.size * 0.05, 0, Math.PI * 2);
+        ctx.fill();
+
+        // 하이라이트 (머리 위)
+        ctx.globalAlpha = this.alpha * 0.5;
+        ctx.fillStyle = "rgba(255,255,255,0.7)";
+        ctx.beginPath();
+        ctx.ellipse(
+          -this.size * 0.1,
+          -this.size * 0.3,
+          this.size * 0.15,
+          this.size * 0.2,
+          0,
+          0,
+          Math.PI * 2
+        );
         ctx.fill();
       }
 

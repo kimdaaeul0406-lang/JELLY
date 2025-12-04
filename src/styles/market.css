@@ -1633,7 +1633,6 @@
   background: #f8f8fc;
   border-radius: 8px;
 }
-
 /* ─────────────────────────── */
 /* 리스트 테이블 고정 크기     */
 /* ─────────────────────────── */
@@ -1746,7 +1745,7 @@
   color: var(--text-sub);
 }
 
-/* 매수/매도 셀 */
+/* 매수/매도 셀 (PC 기본) */
 
 .cell-trade {
   display: flex;
@@ -1816,8 +1815,11 @@
   cursor: not-allowed;
 }
 
-/* 반응형 - 태블릿 정도 */
+/* ─────────────────────────── */
+/* 반응형 (테이블 레이아웃 유지) */
+/* ─────────────────────────── */
 
+/* 태블릿 이하: 보유 칸만 숨기고, 거래 칸 넓혀서 겹침 방지 */
 @media (max-width: 768px) {
   .market-table-fixed .col-name {
     width: 30%;
@@ -1832,128 +1834,47 @@
   }
 }
 
-/* 📱 모바일: 리스트뷰 카드형 – 컴팩트 버전 */
-@media (max-width: 850px) {
-  /* 헤더 숨기고, tbody를 블록으로 전환 */
-  .market-table thead {
-    display: none;
+/* 작은 모바일: 글자/패딩만 살짝 줄이기 – 레이아웃은 PC랑 동일하게 유지 */
+@media (max-width: 480px) {
+  .market-table th,
+  .market-table td {
+    padding: 6px 4px;
+    font-size: 11px;
   }
 
-  .market-table tbody {
-    display: block;
+  .cell-emoji {
+    font-size: 20px;
   }
 
-  /* 한 종목 = 카드 한 장 */
-  .market-row {
-    display: grid;
-    grid-template-areas:
-      "name name"
-      "price change"
-      "trade trade";
-    grid-template-columns: 1fr 1fr;
-    padding: 10px 12px;
-    row-gap: 4px;
-    border-bottom: 1px solid #f1f1f5;
-    background: #ffffff;
-  }
-
-  .market-row td {
-    border: none;
-    padding: 2px 0;
-    background: transparent;
-  }
-
-  /* 1줄: 종목(이모지 + 이름 + 코드) */
-  .market-row .col-name {
-    grid-area: name;
-  }
-
-  /* 2줄 왼쪽: 현재가 */
-  .market-row .col-price {
-    grid-area: price;
-    text-align: left;
-    font-size: 13px;
-  }
-
-  /* 2줄 오른쪽: 등락률 뱃지 */
-  .market-row .col-change {
-    grid-area: change;
-    text-align: right;
-  }
-
-  /* 모바일에서는 보유현황 칸은 숨김 */
-  .market-row .col-holding {
-    display: none;
-  }
-
-  /* 3줄: 수량 + 매수/매도 (한 줄에 정렬) */
-  .market-row .col-trade {
-    grid-area: trade;
-    margin-top: 6px;
-    display: flex;
-    align-items: stretch;
-    gap: 6px;
-  }
-
-  /* 수량 입력칸: 왼쪽 */
-  .market-row .col-trade .qty-input {
-    flex: 0.9;
-    height: 32px;
-    padding: 0 8px;
-    font-size: 13px;
-    margin-bottom: 0; /* 위/아래로 안 떨어지게 */
-    text-align: right;
-    box-sizing: border-box;
-  }
-
-  /* 매수/매도 버튼 묶음: 오른쪽 */
-  .market-row .col-trade .trade-button-row {
-    flex: 1.1;
-    margin-top: 0;
-    display: flex;
-    gap: 6px;
-  }
-
-  .market-row .col-trade .trade-btn {
-    flex: 1;
-    padding: 0;
-    height: 32px;
-    font-size: 13px;
-  }
-}
-/* 📱 모바일에서 수량 + 매수/매도 가로 정렬 */
-@media (max-width: 850px) {
-  /* 매수/매도 셀 전체를 가로 플렉스로 */
-  .market-row .col-trade .cell-trade {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-
-  /* 수량 입력칸 */
-  .market-row .col-trade .trade-qty-input {
-    flex: 0 0 35%; /* 전체 중 약 35% 차지 */
-    height: 32px;
-    padding: 0 6px;
+  .cell-name {
     font-size: 12px;
-    text-align: right;
-    box-sizing: border-box;
-    margin: 0; /* 위아래 여백 제거 */
   }
 
-  /* 버튼 묶음 */
-  .market-row .col-trade .trade-btn-group {
-    flex: 1;
-    display: flex;
+  .cell-id {
+    font-size: 10px;
+  }
+
+  .cell-price-won {
+    font-size: 12px;
+  }
+
+  .change-badge {
+    padding: 1px 4px;
+    font-size: 10px;
+  }
+
+  .cell-trade {
     gap: 4px;
-    margin: 0;
   }
 
-  .market-row .col-trade .trade-btn-buy,
-  .market-row .col-trade .trade-btn-sell {
-    flex: 1;
-    height: 32px;
-    padding: 0;
-    font-size: 12px;
+  .trade-qty-input {
+    padding: 4px 4px;
+    font-size: 11px;
+  }
+
+  .trade-btn-buy,
+  .trade-btn-sell {
+    padding: 4px 0;
+    font-size: 11px;
   }
 }

@@ -5,6 +5,8 @@ export default function JellyPop({ onComplete }) {
   const canvasRef = useRef(null);
   const particlesRef = useRef([]);
   const animationRef = useRef(null);
+  const isMountedRef = useRef(true);
+  const onCompleteRef = useRef(onComplete);
 
   // 파스텔 + 쨍한 젤리 색깔들
   const COLORS = [
@@ -237,13 +239,20 @@ export default function JellyPop({ onComplete }) {
     }
   }
 
+  // onComplete ref 업데이트
+  useEffect(() => {
+    onCompleteRef.current = onComplete;
+  }, [onComplete]);
+
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
+    isMountedRef.current = true;
     const ctx = canvas.getContext("2d");
 
     const resize = () => {
+      if (!isMountedRef.current || !canvas) return;
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
     };
@@ -262,6 +271,11 @@ export default function JellyPop({ onComplete }) {
     let finished = false;
 
     const animate = () => {
+      // 컴포넌트가 언마운트되었으면 애니메이션 중지
+      if (!isMountedRef.current || !canvas) {
+        return;
+      }
+
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       particlesRef.current = particlesRef.current.filter((p) => p.alpha > 0);
@@ -274,20 +288,36 @@ export default function JellyPop({ onComplete }) {
       // 다 사라지면 onComplete 한 번만 호출
       if (!finished && particlesRef.current.length === 0) {
         finished = true;
-        if (onComplete) onComplete();
+        if (isMountedRef.current && onCompleteRef.current) {
+          onCompleteRef.current();
+        }
       }
 
-      animationRef.current = requestAnimationFrame(animate);
+      // 아직 마운트되어 있고 파티클이 있으면 계속 애니메이션
+      if (isMountedRef.current) {
+        animationRef.current = requestAnimationFrame(animate);
+      }
     };
 
     animate();
     window.addEventListener("resize", resize);
 
     return () => {
+      // cleanup: 컴포넌트 언마운트 시 모든 것 정리
+      isMountedRef.current = false;
       window.removeEventListener("resize", resize);
-      if (animationRef.current) cancelAnimationFrame(animationRef.current);
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+        animationRef.current = null;
+      }
+      // 파티클 배열도 비우기
+      particlesRef.current = [];
+      // 캔버스도 비우기
+      if (canvas && ctx) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }
     };
-  }, [onComplete]);
+  }, []); // dependency 제거 - 컴포넌트 마운트 시 한 번만 실행
 
   return <canvas ref={canvasRef} className="jelly-canvas" />;
 }

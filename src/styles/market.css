@@ -1482,7 +1482,7 @@
 }
 
 /* ── 모바일 반응형 (조금 작게) ── */
-@media (max-width: 850px) {
+@media (max-width: 800px) {
   .jelly-chat-floating {
     right: 16px;
     bottom: 16px;
@@ -1834,7 +1834,7 @@
 
 /* 📱 모바일: 리스트뷰 카드형 3줄 레이아웃 (가로 스크롤 X) */
 
-@media (max-width: 850px) {
+@media (max-width: 800px) {
   /* 헤더 숨기고, tbody를 블록으로 */
   .market-table thead {
     display: none;

@@ -29,7 +29,11 @@ export default function AuthModal({
   return (
     <div className="auth-backdrop">
       <div className="auth-modal">
-        <button className="auth-close" onClick={onClose}>
+        <button
+          className="auth-close"
+          onClick={onClose}
+          aria-label="모달 닫기"
+        >
           ✕
         </button>
 
@@ -45,6 +49,8 @@ export default function AuthModal({
                   onChange={(e) =>
                     setLoginForm({ ...loginForm, email: e.target.value })
                   }
+                  aria-label="이메일 입력"
+                  required
                 />
               </label>
               <label>
@@ -55,9 +61,11 @@ export default function AuthModal({
                   onChange={(e) =>
                     setLoginForm({ ...loginForm, password: e.target.value })
                   }
+                  aria-label="비밀번호 입력"
+                  required
                 />
               </label>
-              <button type="submit" className="auth-submit">
+              <button type="submit" className="auth-submit" aria-label="로그인">
                 로그인
               </button>
             </form>
@@ -89,6 +97,8 @@ export default function AuthModal({
                       nickname: e.target.value,
                     })
                   }
+                  aria-label="닉네임 입력"
+                  required
                 />
               </label>
               <label>
@@ -102,6 +112,8 @@ export default function AuthModal({
                       email: e.target.value,
                     })
                   }
+                  aria-label="이메일 입력"
+                  required
                 />
               </label>
               <label>
@@ -115,6 +127,8 @@ export default function AuthModal({
                       password: e.target.value,
                     })
                   }
+                  aria-label="비밀번호 입력"
+                  required
                 />
               </label>
               <label>
@@ -128,10 +142,12 @@ export default function AuthModal({
                       passwordConfirm: e.target.value,
                     })
                   }
+                  aria-label="비밀번호 확인 입력"
+                  required
                 />
               </label>
 
-              <button type="submit" className="auth-submit">
+              <button type="submit" className="auth-submit" aria-label="회원가입">
                 회원가입
               </button>
             </form>

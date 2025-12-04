@@ -116,6 +116,16 @@
   white-space: pre-wrap;
   font-size: 13px;
   word-wrap: break-word;
+  position: relative;
+  padding-right: 28px;
+}
+
+.jelly-chat-message-text {
+  display: block;
+}
+
+.jelly-chat-message-bubble:hover .jelly-chat-copy-btn {
+  opacity: 1;
 }
 
 .jelly-chat-message-bubble-user {
@@ -232,5 +242,79 @@
 .jelly-chat-send-btn-disabled {
   background: #999;
   cursor: default;
+}
+
+/* 메시지 복사 버튼 */
+.jelly-chat-copy-btn {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 20px;
+  height: 20px;
+  border: none;
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.2s, background 0.2s;
+  padding: 0;
+}
+
+.jelly-chat-copy-btn:hover {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.jelly-chat-message-bubble-user .jelly-chat-copy-btn {
+  background: rgba(0, 0, 0, 0.15);
+}
+
+.jelly-chat-message-bubble-user .jelly-chat-copy-btn:hover {
+  background: rgba(0, 0, 0, 0.25);
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+  .jelly-chat-container {
+    width: calc(100vw - 40px) !important;
+    max-width: 320px;
+    height: calc(100vh - 100px) !important;
+    max-height: 500px;
+    right: 20px !important;
+    bottom: 20px !important;
+  }
+
+  .jelly-chat-button {
+    width: 50px;
+    height: 50px;
+    font-size: 22px;
+    right: 15px;
+    bottom: 15px;
+  }
+
+  .jelly-chat-message-bubble {
+    max-width: 85%;
+    font-size: 12px;
+  }
+
+  .jelly-chat-copy-btn {
+    opacity: 1; /* 모바일에서는 항상 보이기 */
+  }
+}
+
+@media (max-width: 480px) {
+  .jelly-chat-container {
+    width: calc(100vw - 20px) !important;
+    right: 10px !important;
+    bottom: 10px !important;
+  }
+
+  .jelly-chat-button {
+    right: 10px;
+    bottom: 10px;
+  }
 }
 

@@ -42,22 +42,55 @@ export default function App() {
 
   // 로그인/검색 내역/지갑/보유종목 불러오기
   useEffect(() => {
-    // 🔐 현재 로그인 세션 정보
-    const savedSession = localStorage.getItem("jellyUserSession");
-    if (savedSession) {
-      const parsed = JSON.parse(savedSession);
-      setUser({ email: parsed.email, nickname: parsed.nickname });
-      setIsLoggedIn(true);
+    try {
+      // 🔐 현재 로그인 세션 정보
+      const savedSession = localStorage.getItem("jellyUserSession");
+      if (savedSession) {
+        const parsed = JSON.parse(savedSession);
+        if (parsed.email && parsed.nickname) {
+          setUser({ email: parsed.email, nickname: parsed.nickname });
+          setIsLoggedIn(true);
+        }
+      }
+    } catch (e) {
+      console.error("세션 정보 로드 실패:", e);
     }
 
-    const savedHistory = localStorage.getItem("jellySearchHistory");
-    if (savedHistory) setSearchHistory(JSON.parse(savedHistory));
+    try {
+      const savedHistory = localStorage.getItem("jellySearchHistory");
+      if (savedHistory) {
+        const parsed = JSON.parse(savedHistory);
+        if (Array.isArray(parsed)) {
+          setSearchHistory(parsed);
+        }
+      }
+    } catch (e) {
+      console.error("검색 내역 로드 실패:", e);
+    }
 
-    const savedWallet = localStorage.getItem("jellyWallet");
-    if (savedWallet) setWallet(JSON.parse(savedWallet));
+    try {
+      const savedWallet = localStorage.getItem("jellyWallet");
+      if (savedWallet) {
+        const parsed = JSON.parse(savedWallet);
+        if (parsed.cash !== undefined && parsed.jelly !== undefined) {
+          setWallet(parsed);
+        }
+      }
+    } catch (e) {
+      console.error("지갑 정보 로드 실패:", e);
+    }
 
-    const savedPositions = localStorage.getItem("jellyPositions");
-    if (savedPositions) setJellyPositions(JSON.parse(savedPositions));
+    try {
+      const savedPositions = localStorage.getItem("jellyPositions");
+      if (savedPositions) {
+        const parsed = JSON.parse(savedPositions);
+        if (typeof parsed === "object" && parsed !== null) {
+          setJellyPositions(parsed);
+        }
+      }
+    } catch (e) {
+      console.error("보유 종목 로드 실패:", e);
+    }
   }, []);
 
   // 검색 히스토리 저장
@@ -369,10 +402,11 @@ export default function App() {
           <main className="dashboard-main">
             {/* 시장(메인) 탭 */}
             <div
-              style={{
-                display: activeTab === "market" ? "block" : "none",
-                width: "100%",
-              }}
+              className={`tab-content ${
+                activeTab === "market"
+                  ? "tab-content-active"
+                  : "tab-content-hidden"
+              }`}
             >
               <DashboardMarket
                 searchHistory={searchHistory}
@@ -382,10 +416,11 @@ export default function App() {
 
             {/* 젤리 주식 탭 */}
             <div
-              style={{
-                display: activeTab === "jelly" ? "block" : "none",
-                width: "100%",
-              }}
+              className={`tab-content ${
+                activeTab === "jelly"
+                  ? "tab-content-active"
+                  : "tab-content-hidden"
+              }`}
             >
               <Market
                 wallet={wallet}
@@ -397,10 +432,11 @@ export default function App() {
 
             {/* 젤리 지갑 탭 */}
             <div
-              style={{
-                display: activeTab === "wallet" ? "block" : "none",
-                width: "100%",
-              }}
+              className={`tab-content ${
+                activeTab === "wallet"
+                  ? "tab-content-active"
+                  : "tab-content-hidden"
+              }`}
             >
               <Wallet
                 wallet={wallet}
@@ -411,10 +447,11 @@ export default function App() {
 
             {/* 마이페이지 탭 */}
             <div
-              style={{
-                display: activeTab === "mypage" ? "block" : "none",
-                width: "100%",
-              }}
+              className={`tab-content ${
+                activeTab === "mypage"
+                  ? "tab-content-active"
+                  : "tab-content-hidden"
+              }`}
             >
               <MyPage
                 user={user}

@@ -1,11 +1,36 @@
 // src/pages/MyPage.jsx
-import React from "react";
+import React, { useState, useEffect } from "react";
 
 export default function MyPage({ user, wallet, jellyPositions }) {
   const totalJellyStocks = Object.values(jellyPositions).reduce(
     (sum, pos) => sum + pos.qty,
     0
   );
+
+  // 환경 설정 상태
+  const [settings, setSettings] = useState(() => {
+    const saved = localStorage.getItem("jellyUserSettings");
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch (e) {
+        console.error("설정 로드 실패:", e);
+      }
+    }
+    return {
+      beginnerMode: true,
+      celebrationPopup: true,
+    };
+  });
+
+  // 설정 저장
+  useEffect(() => {
+    localStorage.setItem("jellyUserSettings", JSON.stringify(settings));
+  }, [settings]);
+
+  function handleSettingChange(key, value) {
+    setSettings((prev) => ({ ...prev, [key]: value }));
+  }
 
   return (
     <div className="simple-page">
@@ -41,13 +66,23 @@ export default function MyPage({ user, wallet, jellyPositions }) {
       </section>
 
       <section className="mypage-section">
-        <h3>환경 설정 (형식용)</h3>
+        <h3>환경 설정</h3>
         <label className="mypage-option">
-          <input type="checkbox" defaultChecked />
+          <input
+            type="checkbox"
+            checked={settings.beginnerMode}
+            onChange={(e) => handleSettingChange("beginnerMode", e.target.checked)}
+            aria-label="주린이 모드"
+          />
           주린이 모드 ON (어려운 용어 최소화)
         </label>
         <label className="mypage-option">
-          <input type="checkbox" defaultChecked />
+          <input
+            type="checkbox"
+            checked={settings.celebrationPopup}
+            onChange={(e) => handleSettingChange("celebrationPopup", e.target.checked)}
+            aria-label="축하 팝업"
+          />
           젤리 10,000개 넘으면 축하 팝업 보기
         </label>
       </section>

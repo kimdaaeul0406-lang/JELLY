@@ -70,8 +70,13 @@ export default function Wallet({ wallet, onCharge, onConvert }) {
               max={MAX_CHARGE_AMOUNT}
               onChange={(e) => setAmount(e.target.value)}
               placeholder="충전할 금액 (원)"
+              aria-label="충전할 금액 입력"
             />
-            <button type="submit" className="wallet-charge-btn">
+            <button
+              type="submit"
+              className="wallet-charge-btn"
+              aria-label="충전 및 젤리 적립"
+            >
               충전 + 젤리 적립
             </button>
           </form>
@@ -92,6 +97,11 @@ export default function Wallet({ wallet, onCharge, onConvert }) {
             }`}
             onClick={onConvert}
             disabled={!canConvert}
+            aria-label={
+              canConvert
+                ? "젤리 10,000개를 현금으로 전환"
+                : "젤리가 부족하여 전환 불가"
+            }
           >
             젤리 10,000 J 현금으로 전환하기
           </button>

@@ -51,3 +51,16 @@ body {
   pointer-events: none;
   z-index: 10;
 }
+
+/* 탭 컨텐츠 */
+.tab-content {
+  width: 100%;
+}
+
+.tab-content-active {
+  display: block;
+}
+
+.tab-content-hidden {
+  display: none;
+}

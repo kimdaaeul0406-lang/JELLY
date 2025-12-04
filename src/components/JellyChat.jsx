@@ -1,5 +1,5 @@
 // src/components/JellyChat.jsx
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "../styles/jelly-chat.css";
 import { getBotReply } from "./JellyChat/api";
 import ChatButton from "./JellyChat/ChatButton";
@@ -12,19 +12,52 @@ function createMessageId() {
   return `msg_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 }
 
+// 초기 봇 메시지
+const INITIAL_BOT_MESSAGE = {
+  id: createMessageId(),
+  from: "bot",
+  text: "안녕! 나는 젤리봇 🍇\n주식 기초가 궁금하면 아무거나 편하게 물어봐!",
+};
+
 export default function JellyChat() {
   const [isOpen, setIsOpen] = useState(false);
   const [isSending, setIsSending] = useState(false);
+  const inputRef = useRef(null);
 
-  const [messages, setMessages] = useState([
-    {
-      id: createMessageId(),
-      from: "bot",
-      text: "안녕! 나는 젤리봇 🍇\n주식 기초가 궁금하면 아무거나 편하게 물어봐!",
-    },
-  ]);
+  // localStorage에서 메시지 히스토리 불러오기
+  const [messages, setMessages] = useState(() => {
+    const saved = localStorage.getItem("jellyChatMessages");
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return parsed;
+        }
+      } catch (e) {
+        console.error("Failed to parse chat messages", e);
+      }
+    }
+    return [INITIAL_BOT_MESSAGE];
+  });
 
   const [input, setInput] = useState("");
+
+  // 메시지가 변경될 때마다 localStorage에 저장
+  useEffect(() => {
+    if (messages.length > 0) {
+      localStorage.setItem("jellyChatMessages", JSON.stringify(messages));
+    }
+  }, [messages]);
+
+  // 채팅창이 열릴 때 입력창에 자동 포커스
+  useEffect(() => {
+    if (isOpen && inputRef.current) {
+      // 약간의 지연을 두어 DOM이 완전히 렌더링된 후 포커스
+      setTimeout(() => {
+        inputRef.current?.focus();
+      }, 100);
+    }
+  }, [isOpen]);
 
   async function handleSend() {
     const trimmed = input.trim();
@@ -64,13 +97,15 @@ export default function JellyChat() {
 
   // 🧹 대화 전체 삭제
   function clearChat() {
-    setMessages([
-      {
+    if (window.confirm("대화 내역을 모두 삭제할까요?")) {
+      const resetMessage = {
         id: createMessageId(),
         from: "bot",
         text: "대화가 초기화되었어! 다시 아무거나 물어봐줘 🍓",
-      },
-    ]);
+      };
+      setMessages([resetMessage]);
+      localStorage.setItem("jellyChatMessages", JSON.stringify([resetMessage]));
+    }
   }
 
   // 🔘 닫혀 있을 때는 동그란 버튼만 보임
@@ -87,6 +122,7 @@ export default function JellyChat() {
         onChange={setInput}
         onSend={handleSend}
         isSending={isSending}
+        inputRef={inputRef}
       />
     </div>
   );

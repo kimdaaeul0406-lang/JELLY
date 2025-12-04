@@ -5,7 +5,11 @@ export default function Home({ onStart }) {
   return (
     <div className="card">
       <div className="badge">JELLY STOCK</div>
-      <button className="start-btn" onClick={onStart}>
+      <button
+        className="start-btn"
+        onClick={onStart}
+        aria-label="젤리 주식 시작하기"
+      >
         젤리 주식 시작하기
       </button>
     </div>

@@ -1647,18 +1647,18 @@
   padding: 12px 8px;
   vertical-align: middle;
 }
-
+/* 열 폭 – 등락률에 공간 더 주고, 매수/매도는 약간 줄이기 */
 .market-table-fixed .col-name {
-  width: 25%;
+  width: 24%;
 }
 
 .market-table-fixed .col-price {
-  width: 18%;
+  width: 17%;
   text-align: center;
 }
 
 .market-table-fixed .col-change {
-  width: 12%;
+  width: 16%; /* ⬅️ 등락률 칸 넓게 */
   text-align: center;
 }
 
@@ -1667,9 +1667,8 @@
 }
 
 .market-table-fixed .col-trade {
-  width: 23%;
+  width: 21%; /* ⬅️ 매수/매도 칸 살짝 줄임 */
 }
-
 /* 종목 셀 */
 
 .cell-stock {
@@ -1829,8 +1828,12 @@
     display: none;
   }
 
+  .market-table-fixed .col-change {
+    width: 18%; /* 모바일에서도 등락률 칸 조금 더 확보 */
+  }
+
   .market-table-fixed .col-trade {
-    width: 35%;
+    width: 30%; /* 매수/매도 칸 살짝 줄이기 */
   }
 }
 

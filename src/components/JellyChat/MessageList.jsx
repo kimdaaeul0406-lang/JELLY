@@ -17,7 +17,14 @@ export default function MessageList({ messages, isSending }) {
       ))}
 
       {isSending && (
-        <p className="jelly-chat-loading">젤리봇이 생각 중… 🍬</p>
+        <div className="jelly-chat-loading">
+          <div className="jelly-chat-loading-text">젤리봇이 생각 중</div>
+          <div className="jelly-chat-loading-dots">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+        </div>
       )}
 
       <div ref={messagesEndRef} />

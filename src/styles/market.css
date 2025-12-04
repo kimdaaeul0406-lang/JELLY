@@ -491,6 +491,33 @@
   border: 1px solid rgba(190, 158, 204, 0.6);
 }
 
+/* 카드보기 전용 - 거래 불가 (실시간 변동만 표시) */
+.trade-box.view-only {
+  text-align: center;
+  padding: 0.8rem 0.6rem;
+}
+
+.trade-box.view-only .trade-info {
+  font-size: 0.85rem;
+  margin-bottom: 0.4rem;
+  color: var(--text-main);
+}
+
+.trade-box.view-only .trade-info strong {
+  color: var(--jelly-blue);
+  font-size: 0.95rem;
+}
+
+.trade-hint {
+  font-size: 0.7rem;
+  color: var(--text-sub);
+  margin-top: 0.3rem;
+  padding: 0.4rem;
+  background: #f8f5ff;
+  border-radius: 6px;
+  border: 1px dashed rgba(230, 214, 245, 0.6);
+}
+
 /* 인기 종목 카드 매수 버튼 */
 
 .stock-actions {
@@ -668,6 +695,7 @@
 
 /* 이름순 / 수익률순 탭 */
 
+/* 정렬 탭 - 카드보기에서도 리스트보기와 동일한 스타일 사용 */
 .sort-tabs {
   display: flex;
   gap: 6px;
@@ -687,6 +715,12 @@
   background: #ffffff;
   border-color: #999999;
   font-weight: 600;
+}
+
+/* 카드보기용 정렬 행 (리스트보기와 동일한 스타일) */
+.stocks-section .market-table-sort-row {
+  margin-top: 8px;
+  margin-bottom: 12px;
 }
 
 /* TOP2 큰 카드 */

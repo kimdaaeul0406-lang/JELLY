@@ -40,6 +40,15 @@ export default function Wallet({ wallet, onCharge, onConvert }) {
   }
 
   const canConvert = wallet.jelly >= 10000;
+  const inputValue = Number(amount) || 0;
+  const estimatedJelly = Math.floor(inputValue / 10000) * 10;
+
+  // 빠른 충전 버튼
+  const quickChargeAmounts = [10000, 50000, 100000, 500000];
+
+  function handleQuickCharge(amount) {
+    setAmount(amount.toString());
+  }
 
   return (
     <div className="simple-page">
@@ -49,12 +58,20 @@ export default function Wallet({ wallet, onCharge, onConvert }) {
       <div className="wallet-grid">
         <section className="wallet-block">
           <h3>현재 잔액</h3>
-          <p className="wallet-balance">
-            현금: <strong>{wallet.cash.toLocaleString()}원</strong>
-          </p>
-          <p className="wallet-balance">
-            젤리: <strong>{wallet.jelly.toLocaleString()} J</strong>
-          </p>
+          <div className="wallet-balance-card">
+            <div className="wallet-balance-item">
+              <span className="wallet-balance-label">현금</span>
+              <span className="wallet-balance-amount">
+                {wallet.cash.toLocaleString()}원
+              </span>
+            </div>
+            <div className="wallet-balance-item">
+              <span className="wallet-balance-label">젤리</span>
+              <span className="wallet-balance-amount jelly">
+                {wallet.jelly.toLocaleString()} J
+              </span>
+            </div>
+          </div>
           <p className="wallet-note">
             10,000원 충전할 때마다 <strong>10젤리</strong>가 적립돼요.
           </p>
@@ -72,6 +89,34 @@ export default function Wallet({ wallet, onCharge, onConvert }) {
               placeholder="충전할 금액 (원)"
               aria-label="충전할 금액 입력"
             />
+
+            {/* 빠른 충전 버튼 */}
+            <div className="wallet-quick-charge">
+              <span className="wallet-quick-label">빠른 충전:</span>
+              <div className="wallet-quick-buttons">
+                {quickChargeAmounts.map((amt) => (
+                  <button
+                    key={amt}
+                    type="button"
+                    className="wallet-quick-btn"
+                    onClick={() => handleQuickCharge(amt)}
+                    aria-label={`${amt.toLocaleString()}원 빠른 충전`}
+                  >
+                    {amt >= 100000
+                      ? `${amt / 10000}만원`
+                      : `${amt.toLocaleString()}원`}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* 예상 적립 젤리 표시 */}
+            {inputValue > 0 && (
+              <div className="wallet-estimated">
+                예상 적립: <strong>{estimatedJelly} J</strong>
+              </div>
+            )}
+
             <button
               type="submit"
               className="wallet-charge-btn"
@@ -91,6 +136,24 @@ export default function Wallet({ wallet, onCharge, onConvert }) {
             젤리를 <strong>10,000 J</strong> 이상 모으면, 한 번에 현금으로
             전환할 수 있어요.
           </p>
+
+          {/* 전환 진행률 표시 */}
+          <div className="wallet-convert-progress">
+            <div className="wallet-convert-progress-bar">
+              <div
+                className="wallet-convert-progress-fill"
+                style={{
+                  width: `${Math.min(100, (wallet.jelly / 10000) * 100)}%`,
+                }}
+              />
+            </div>
+            <div className="wallet-convert-progress-text">
+              {wallet.jelly >= 10000
+                ? "전환 가능!"
+                : `${10000 - wallet.jelly} J 더 필요해요`}
+            </div>
+          </div>
+
           <button
             className={`wallet-convert-btn ${
               canConvert ? "" : "wallet-convert-btn-disabled"
@@ -107,14 +170,14 @@ export default function Wallet({ wallet, onCharge, onConvert }) {
           </button>
           {!canConvert && (
             <p className="wallet-tip">
-              아직 모인 젤리가 부족해요. (현재 {wallet.jelly.toLocaleString()}{" "}
-              J)
+              현재 보유: <strong>{wallet.jelly.toLocaleString()} J</strong> /
+              필요: <strong>10,000 J</strong>
             </p>
           )}
           {canConvert && (
             <p className="wallet-tip">
-              전환 버튼을 누르면 젤리 10,000 J가 사라지고, 그만큼 현금이
-              늘어납니다.
+              전환 시: 젤리 <strong>10,000 J</strong> → 현금{" "}
+              <strong>10,000,000원</strong>
             </p>
           )}
         </section>

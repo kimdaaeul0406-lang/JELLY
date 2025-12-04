@@ -22,6 +22,7 @@ export default function Market({ wallet, jellyPositions, onBuy, onSell }) {
       try {
         const saved = JSON.parse(savedRaw);
         if (
+          saved &&
           saved.version === JELLY_MARKET_VERSION &&
           Array.isArray(saved.items) &&
           saved.items.length === BASE_JELLY_STOCKS.length
@@ -29,12 +30,15 @@ export default function Market({ wallet, jellyPositions, onBuy, onSell }) {
           return saved.items.map((s) => ({
             ...s,
             history:
-              s.history && s.history.length > 0 ? s.history : [s.priceWon],
+              s.history && Array.isArray(s.history) && s.history.length > 0
+                ? s.history
+                : [s.priceWon || s.basePriceWon],
             volume: s.volume ?? 100 + Math.floor(Math.random() * 400),
           }));
         }
       } catch (e) {
         console.error("Failed to parse jellyMarketStocks", e);
+        // 파싱 실패 시 기본값으로 초기화
       }
     }
 
@@ -139,7 +143,7 @@ export default function Market({ wallet, jellyPositions, onBuy, onSell }) {
           };
         })
       );
-    }, 1000);
+    }, 500);
 
     return () => clearInterval(interval);
   }, []);
@@ -232,8 +236,12 @@ export default function Market({ wallet, jellyPositions, onBuy, onSell }) {
   // 🔸 매수/매도
   function handleBuy(stock, jellyPrice) {
     const q = Number(qty[stock.id] || 0);
-    if (q <= 0) {
-      alert("1주 이상 입력해 주세요.");
+    if (q <= 0 || !Number.isInteger(q)) {
+      alert("1주 이상의 정수를 입력해 주세요.");
+      return;
+    }
+    if (q > 10000) {
+      alert("한 번에 10,000주 이상 매수할 수 없어요.");
       return;
     }
     onBuy(stock.id, stock.name, jellyPrice, q);
@@ -242,8 +250,13 @@ export default function Market({ wallet, jellyPositions, onBuy, onSell }) {
 
   function handleSell(stock, jellyPrice) {
     const sellQty = Number(qty[stock.id] || 0);
-    if (sellQty <= 0) {
-      alert("매도할 수량을 입력해주세요.");
+    if (sellQty <= 0 || !Number.isInteger(sellQty)) {
+      alert("1주 이상의 정수를 입력해 주세요.");
+      return;
+    }
+    const holding = jellyPositions[stock.id];
+    if (holding && sellQty > holding.qty) {
+      alert(`보유 수량(${holding.qty}주)보다 많이 매도할 수 없어요.`);
       return;
     }
     onSell(stock.id, stock.name, jellyPrice, sellQty);
@@ -326,8 +339,13 @@ export default function Market({ wallet, jellyPositions, onBuy, onSell }) {
               placeholder="젤리 종목명 또는 티커 검색 (예: 딸기, JELLY-STR, 🍧)"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
+              aria-label="젤리 종목 검색"
             />
-            <button className="jelly-search-btn" type="submit">
+            <button
+              className="jelly-search-btn"
+              type="submit"
+              aria-label="검색 실행"
+            >
               검색
             </button>
           </form>
@@ -361,6 +379,8 @@ export default function Market({ wallet, jellyPositions, onBuy, onSell }) {
               viewMode === "card" ? "view-toggle-btn active" : "view-toggle-btn"
             }
             onClick={() => setViewMode("card")}
+            aria-label="카드 보기 모드"
+            aria-pressed={viewMode === "card"}
           >
             카드 보기
           </button>
@@ -371,6 +391,8 @@ export default function Market({ wallet, jellyPositions, onBuy, onSell }) {
                 : "view-toggle-btn"
             }
             onClick={() => setViewMode("table")}
+            aria-label="리스트 보기 모드"
+            aria-pressed={viewMode === "table"}
           >
             리스트 보기
           </button>

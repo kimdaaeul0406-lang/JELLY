@@ -145,6 +145,124 @@
   color: var(--text-sub);
 }
 
+/* 지갑 잔액 카드 */
+.wallet-balance-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.wallet-balance-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(230, 214, 245, 0.3);
+}
+
+.wallet-balance-item:last-child {
+  border-bottom: none;
+}
+
+.wallet-balance-label {
+  font-size: 14px;
+  color: var(--text-sub);
+}
+
+.wallet-balance-amount {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.wallet-balance-amount.jelly {
+  color: var(--jelly-blue);
+}
+
+/* 빠른 충전 */
+.wallet-quick-charge {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(230, 214, 245, 0.3);
+}
+
+.wallet-quick-label {
+  font-size: 11px;
+  color: var(--text-sub);
+  display: block;
+  margin-bottom: 6px;
+}
+
+.wallet-quick-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.wallet-quick-btn {
+  border: 1px solid var(--border-soft);
+  background: #ffffff;
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-size: 11px;
+  cursor: pointer;
+  color: var(--text-main);
+  transition: all 0.2s;
+}
+
+.wallet-quick-btn:hover {
+  background: var(--jelly-blue);
+  color: #ffffff;
+  border-color: var(--jelly-blue);
+}
+
+.wallet-quick-btn:active {
+  transform: scale(0.95);
+}
+
+/* 예상 적립 */
+.wallet-estimated {
+  padding: 6px 10px;
+  background: #fff7d1;
+  border-radius: 6px;
+  font-size: 12px;
+  color: #5b4a17;
+  text-align: center;
+  margin-top: 4px;
+}
+
+.wallet-estimated strong {
+  color: var(--jelly-blue);
+  font-weight: 700;
+}
+
+/* 전환 진행률 */
+.wallet-convert-progress {
+  margin: 10px 0;
+}
+
+.wallet-convert-progress-bar {
+  background: #f0f0f0;
+  height: 10px;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 6px;
+}
+
+.wallet-convert-progress-fill {
+  background: linear-gradient(90deg, var(--jelly-blue), var(--jelly-yellow));
+  height: 100%;
+  border-radius: 10px;
+  transition: width 0.3s ease;
+}
+
+.wallet-convert-progress-text {
+  font-size: 11px;
+  color: var(--text-sub);
+  text-align: center;
+}
+
 /* 포트폴리오 요약 */
 .jelly-portfolio {
   margin-top: 10px;

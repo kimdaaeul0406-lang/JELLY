@@ -54,16 +54,56 @@ export default function MyPage({ user, wallet, jellyPositions }) {
 
       <section className="mypage-section">
         <h3>내 지갑 요약</h3>
-        <p>
-          현금: <strong>{wallet.cash.toLocaleString()}원</strong>
-        </p>
-        <p>
-          젤리: <strong>{wallet.jelly.toLocaleString()} J</strong>
-        </p>
-        <p>
-          보유 젤리 주식 수량: <strong>{totalJellyStocks}주</strong>
-        </p>
+        <div className="mypage-wallet-summary">
+          <div className="mypage-wallet-item">
+            <span className="mypage-wallet-label">현금</span>
+            <span className="mypage-wallet-value">
+              {wallet.cash.toLocaleString()}원
+            </span>
+          </div>
+          <div className="mypage-wallet-item">
+            <span className="mypage-wallet-label">젤리</span>
+            <span className="mypage-wallet-value">
+              {wallet.jelly.toLocaleString()} J
+            </span>
+          </div>
+          <div className="mypage-wallet-item">
+            <span className="mypage-wallet-label">보유 주식</span>
+            <span className="mypage-wallet-value">
+              {totalJellyStocks}주
+            </span>
+          </div>
+        </div>
       </section>
+
+      {totalJellyStocks > 0 && (
+        <section className="mypage-section">
+          <h3>보유 종목 상세</h3>
+          <div className="mypage-positions">
+            {Object.entries(jellyPositions).map(([id, pos]) => (
+              <div key={id} className="mypage-position-item">
+                <div className="mypage-position-header">
+                  <span className="mypage-position-name">{pos.name}</span>
+                  <span className="mypage-position-qty">{pos.qty}주</span>
+                </div>
+                <div className="mypage-position-detail">
+                  평균 매수가: <strong>{pos.avgPriceJelly.toLocaleString()} J</strong>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {totalJellyStocks === 0 && (
+        <section className="mypage-section">
+          <h3>보유 종목</h3>
+          <p className="mypage-empty">아직 보유한 젤리 주식이 없어요.</p>
+          <p className="mypage-empty-hint">
+            "젤리주식" 탭에서 주식을 매수해보세요! 🍬
+          </p>
+        </section>
+      )}
 
       <section className="mypage-section">
         <h3>환경 설정</h3>

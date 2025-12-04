@@ -226,13 +226,15 @@ export default function JellyMarketTable({
                   <td className="market-cell-trade">
                     <input
                       type="number"
-                      min="0"
+                      min="1"
+                      max="10000"
                       className="qty-input"
                       value={inputVal}
                       onChange={(e) =>
                         handleQtyChange(stock.id, e.target.value)
                       }
                       onClick={(e) => e.stopPropagation()}
+                      aria-label={`${stock.name} 매수/매도 수량 입력`}
                     />
                     <div className="trade-button-row">
                       <button
@@ -241,6 +243,7 @@ export default function JellyMarketTable({
                           e.stopPropagation();
                           onBuy(stock, jellyPrice);
                         }}
+                        aria-label={`${stock.name} 매수`}
                       >
                         매수
                       </button>
@@ -250,6 +253,9 @@ export default function JellyMarketTable({
                           e.stopPropagation();
                           onSell(stock, jellyPrice);
                         }}
+                        disabled={holding === 0}
+                        aria-label={`${stock.name} 매도`}
+                        title={holding === 0 ? "보유 종목이 아니에요" : ""}
                       >
                         매도
                       </button>

@@ -94,48 +94,12 @@ export default function JellyMarketCards({
                   )}
                 </div>
 
-                <div className="trade-box">
-                  <label>
-                    <span className="trade-label">수량</span>
-                    <input
-                      type="number"
-                      min="1"
-                      className="trade-input"
-                      value={qty[stock.id] ?? ""}
-                      onChange={(e) => {
-                        const val = e.target.value;
-                        setQty((prev) => ({
-                          ...prev,
-                          [stock.id]: val,
-                        }));
-                      }}
-                      placeholder="1"
-                    />
-                  </label>
+                <div className="trade-box view-only">
                   <div className="trade-info">
-                    예상 필요 젤리:{" "}
-                    <strong>
-                      {(
-                        jellyPrice * (Number(qty[stock.id] || 0) || 0)
-                      ).toLocaleString("ko-KR")}
-                      J
-                    </strong>
+                    현재가: <strong>{jellyPrice.toLocaleString("ko-KR")} J</strong>
                   </div>
-
-                  <div className="trade-btn-wrap">
-                    <button
-                      className="trade-buy-btn"
-                      onClick={() => onBuy(stock, jellyPrice)}
-                    >
-                      매수
-                    </button>
-                    <button
-                      className="trade-sell-btn"
-                      onClick={() => onSell(stock, jellyPrice)}
-                      disabled={!holding}
-                    >
-                      매도
-                    </button>
+                  <div className="trade-hint">
+                    💡 거래는 리스트 보기에서 가능해요
                   </div>
                 </div>
               </article>
@@ -151,18 +115,26 @@ export default function JellyMarketCards({
           <p>등락률이나 이름 기준으로 정렬해서 볼 수 있어요.</p>
         </div>
 
-        <div className="sort-tabs">
+        <div className="market-table-sort-row">
           <button
-            className={sortKey === "name" ? "sort-tab active" : "sort-tab"}
+            className={
+              sortKey === "name" ? "sort-chip sort-chip-active" : "sort-chip"
+            }
             onClick={() => setSortKey("name")}
+            aria-label="이름순 정렬"
+            aria-pressed={sortKey === "name"}
           >
-            ㄱㄴㄷ 이름순
+            이름순
           </button>
           <button
-            className={sortKey === "change" ? "sort-tab active" : "sort-tab"}
+            className={
+              sortKey === "change" ? "sort-chip sort-chip-active" : "sort-chip"
+            }
             onClick={() => setSortKey("change")}
+            aria-label="등락률순 정렬"
+            aria-pressed={sortKey === "change"}
           >
-            🎯 기준가 대비 수익률
+            등락률순
           </button>
         </div>
 
@@ -238,48 +210,12 @@ export default function JellyMarketCards({
                   )}
                 </div>
 
-                <div className="trade-box">
-                  <label>
-                    <span className="trade-label">수량</span>
-                    <input
-                      type="number"
-                      min="1"
-                      className="trade-input"
-                      value={qty[stock.id] ?? ""}
-                      onChange={(e) => {
-                        const val = e.target.value;
-                        setQty((prev) => ({
-                          ...prev,
-                          [stock.id]: val,
-                        }));
-                      }}
-                      placeholder="1"
-                    />
-                  </label>
+                <div className="trade-box view-only">
                   <div className="trade-info">
-                    예상 필요 젤리:{" "}
-                    <strong>
-                      {(
-                        jellyPrice * (Number(qty[stock.id] || 0) || 0)
-                      ).toLocaleString("ko-KR")}
-                      J
-                    </strong>
+                    현재가: <strong>{jellyPrice.toLocaleString("ko-KR")} J</strong>
                   </div>
-
-                  <div className="trade-btn-wrap">
-                    <button
-                      className="trade-buy-btn"
-                      onClick={() => onBuy(stock, jellyPrice)}
-                    >
-                      매수
-                    </button>
-                    <button
-                      className="trade-sell-btn"
-                      onClick={() => onSell(stock, jellyPrice)}
-                      disabled={!holding}
-                    >
-                      매도
-                    </button>
+                  <div className="trade-hint">
+                    💡 거래는 리스트 보기에서 가능해요
                   </div>
                 </div>
               </article>

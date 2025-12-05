@@ -21,8 +21,7 @@ const HOT_CODES = [
 const API_URL =
   "https://apis.data.go.kr/1160100/service/GetStockSecuritiesInfoService/getStockPriceInfo";
 
-const API_KEY =
-  "37c76d375164de2a5b62d339534e9ed9417e99fb398695594f253508b4cfb42d";
+const API_KEY = import.meta.env.VITE_API_KEY;
 
 // 🔹 캐시 유효 시간 (5분)
 const CACHE_DURATION = 5 * 60 * 1000;
